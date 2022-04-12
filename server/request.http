@@ -1,0 +1,25 @@
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+    "username": "vipbzo88",
+    "password": "1234",
+    "isOwner": false
+}
+
+###
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+    "username": "vipbzo22",
+    "password": "1234"
+}
+
+###
+GET http://localhost:5000/api/auth/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjUzMWE3Mzc2NzM1MjYwN2Y1YWJlZWEiLCJpc093bmVyIjpmYWxzZSwiaWF0IjoxNjQ5NjEzODYxLCJleHAiOjE2NDk3MDAyNjF9.0nMTn7i9IzeX_zc5Sb2qmmJFKVahomKxx_mjvQRoHlU
+
+###
+GET http://localhost:5000/api/home/owner
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjUyOTM4M2IwNzZiNGZlY2ExNThiOTIiLCJpc093bmVyIjp0cnVlLCJpYXQiOjE2NDk2NjY3MjAsImV4cCI6MTY0OTc1MzEyMH0._nECPb4m5A131Zf0oIL7wjhHY9vS43aXO1-hED4WvJw
