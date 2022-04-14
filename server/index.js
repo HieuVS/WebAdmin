@@ -7,6 +7,8 @@ const authRouter = require('./routes/auth');
 const ownerRouter = require('./routes/owner');
 const staffRouter = require('./routes/staff');
 const itemRouter = require('./routes/item');
+const tableRouter = require('./routes/table');
+const orderRouter = require('./routes/order');
 
 const authJwt = require('./middleware/auth');
 
@@ -38,6 +40,11 @@ app.use('/api/staff', staffRouter);
 //api for item
 app.use('/api/item', itemRouter);
 
+//api for table
+app.use('/api/table',tableRouter);
+
+//api for order
+app.use('/api/order', orderRouter);
 
 app.get('/api/home/', (req, res) => {
   return res.send("Hello staff");

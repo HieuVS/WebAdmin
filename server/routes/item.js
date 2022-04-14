@@ -45,8 +45,8 @@ router.post("/", [verifyToken, isOwner], async (req, res) => {
   }
 });
 
-// @route POST api/item
-// @desc Create item
+// @route GET api/item
+// @desc get item list
 // @access Private
 
 router.get("/", [verifyToken, isOwner], async (req, res) => {
