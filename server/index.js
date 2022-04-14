@@ -5,6 +5,8 @@ const cors = require('cors');
 const mongoose = require("mongoose");
 const authRouter = require('./routes/auth');
 const ownerRouter = require('./routes/owner');
+const staffRouter = require('./routes/staff');
+const itemRouter = require('./routes/item');
 
 const authJwt = require('./middleware/auth');
 
@@ -25,11 +27,17 @@ connectDB();
 
 app.use(express.json());
 //app.use(cors());
+//api for login, register
 app.use('/api/auth', authRouter);
 
-app.use('/api/home/', ownerRouter);
+//app.use('/api/home/', ownerRouter);
 
-//app.use('/api/staff');
+//api for staff
+app.use('/api/staff', staffRouter);
+
+//api for item
+app.use('/api/item', itemRouter);
+
 
 app.get('/api/home/', (req, res) => {
   return res.send("Hello staff");

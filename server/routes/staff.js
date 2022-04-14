@@ -9,6 +9,8 @@ const crypto = require("crypto");
 // @access Private
 
 router.post("/", [verifyToken, isOwner], async (req, res) => {
+  if(!req.isOwner) return res.status(401).json({success: false, message: "Need Owner permission"});
+
   const { name, age, phone } = req.body;
   if (!name)
     res
@@ -42,6 +44,7 @@ router.post("/", [verifyToken, isOwner], async (req, res) => {
 // @access Private
 
 router.get("/", [verifyToken, isOwner], async (req, res) => {
+  if(!req.isOwner) return res.status(401).json({success: false, message: "Need Owner permission"});
   try {
     const staffs = await Staff.find({});
 
@@ -52,7 +55,12 @@ router.get("/", [verifyToken, isOwner], async (req, res) => {
   }
 });
 
+// @route PUT api/staff/:id
+// @desc Update a staff's infomation
+// @access Private
+
 router.put("/:id", [verifyToken, isOwner], async (req, res) => {
+  if(!req.isOwner) return res.status(401).json({success: false, message: "Need Owner permission"});
   const { name, age, phone } = req.body;
   if (!name)
     res
@@ -67,7 +75,7 @@ router.put("/:id", [verifyToken, isOwner], async (req, res) => {
     };
 
     updatedStaff = await Staff.findOneAndUpdate(
-      { _id: red.params.id },
+      { _id: req.params.id },
       updatedStaff,
       { new: true }
     );
@@ -77,7 +85,7 @@ router.put("/:id", [verifyToken, isOwner], async (req, res) => {
         .status(401)
         .json({
           success: false,
-          message: "Staff not found or user not authorized",
+          message: "Staff not found",
         });
     res.status(200).json({success: true, message: "Update staff successfully", staff: updatedStaff})
   } catch (error) {
@@ -85,3 +93,24 @@ router.put("/:id", [verifyToken, isOwner], async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
+
+// @route DELETE api/staff/:id
+// @desc delete a staff's info
+// @access Private
+
+router.delete('/:id',[verifyToken,isOwner], async (req,res) => {
+  if(!req.isOwner) return res.status(401).json({success: false, message: "Need Owner permission"});
+  try {
+    const deleteCondition = { _id: req.params.id };
+    const deletedStaff = await Staff.findOneAndDelete(deleteCondition);
+
+    if(!deletedStaff) res.status(401).json({success: false, message: "Staff not found"});
+
+    res.status(200).json({success: true, message: "Delete staff successfully", staffId: req.params.id});
+  } catch(error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+})
+
+module.exports = router;

@@ -12,7 +12,7 @@ POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-    "username": "vipbzo22",
+    "username": "vipbzo88",
     "password": "1234"
 }
 
@@ -23,3 +23,22 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjUzM
 ###
 GET http://localhost:5000/api/home/owner
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjUyOTM4M2IwNzZiNGZlY2ExNThiOTIiLCJpc093bmVyIjp0cnVlLCJpYXQiOjE2NDk2NjY3MjAsImV4cCI6MTY0OTc1MzEyMH0._nECPb4m5A131Zf0oIL7wjhHY9vS43aXO1-hED4WvJw
+
+###
+GET http://localhost:5000/api/staff
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjUzMWE3Mzc2NzM1MjYwN2Y1YWJlZWEiLCJpc093bmVyIjpmYWxzZSwiaWF0IjoxNjQ5Nzc4MDc4LCJleHAiOjE2NDk4NjQ0Nzh9.Ri2GIrmfHXy8aqQKvvkHk32-d2Vckdny3N3wLMpKgLc
+
+###
+DELETE http://localhost:5000/api/staff/6255a439d09400276210061e
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjUyOTM4M2IwNzZiNGZlY2ExNThiOTIiLCJpc093bmVyIjp0cnVlLCJpYXQiOjE2NDk3Nzg5MTAsImV4cCI6MTY0OTg2NTMxMH0.WxZaFZ3Cjo_R1br5t5PUkimSkhA38_V9xHXzBfkaa4o
+
+if(req.query) {
+    let updatedItem = {
+      stock,
+    };
+    updatedItem = await Item.findOneAndUpdate((
+      { _id: req.params.id },
+      { $inc : { stock: - req.query.a }},
+      { new:  true}
+    ))
+  }
