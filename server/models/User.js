@@ -11,7 +11,10 @@ const User = new Schema({
         type: String,
         required: true,
     },
-    isOwner: Boolean,
+    isOwner: { 
+        type: Boolean,
+        required: true,
+    },
     name: String,
     age: String,
     phone: String,

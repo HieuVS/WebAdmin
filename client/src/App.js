@@ -1,11 +1,20 @@
 import "./App.css";
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Landing from "./Components/layout/Landing";
 import Auth from "./views/Auth";
 import { ThemeProvider } from "@material-ui/core";
 import { createTheme } from "@material-ui/core/styles";
+import store from "./redux/store";
+import { actionAuths } from "./redux/actions/actionAuths";
+
 
 function App() {
+  useEffect(()=> {
+    console.log("App.js")
+    store.dispatch(actionAuths)
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <link rel="preconnect" href="https://fonts.googleapis.com"></link>
@@ -70,6 +79,11 @@ const theme = createTheme({
     MuiInputBase: {
       root: {
         fontSize:'20px',
+      }
+    },
+    MuiFormControlLabel: {
+      label: {
+        fontSize: '20px'
       }
     }
   },

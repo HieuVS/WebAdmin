@@ -1,29 +1,39 @@
 import React from "react";
-import { useState } from 'react'
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Grid, Paper, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { loginUser } from "../../api/authApi";
+import WarningMessage from "../layout/WarningMessage";
 
 const LoginForm = () => {
   const classes = useStyle();
   const [loginForm, setLoginForm] = useState({
-      username:'',
-      password:''
+    username: "",
+    password: "",
   });
+  const [alert, setAlert] = useState(null);
+
   const { username, password } = loginForm;
-  const onChangeLogin = event => {
-    setLoginForm({ ...loginForm, [event.target.name] : event.target.value });
-  }
+
+  const onChangeLogin = (event) => {
+    setLoginForm({ ...loginForm, [event.target.name]: event.target.value });
+  };
 
   const login = async (event) => {
     event.preventDefault();
 
     try {
-        //const loginData = await loginUser(loginForm);
+      const loginResponse = await loginUser(loginForm);
+      if (!loginResponse.success) {
+        setAlert({ type: "danger", message: loginResponse.message });
+        setTimeout(() => setAlert(null), 5000);
+      }
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
-  }
+  };
+
   return (
     <>
       <form onSubmit={login}>
@@ -51,6 +61,7 @@ const LoginForm = () => {
               onChange={onChangeLogin}
               value={password}
             ></TextField>
+            <WarningMessage info={alert}/>
             <Button
               className={classes.btnLogin}
               type="submit"
