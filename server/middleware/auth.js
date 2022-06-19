@@ -4,7 +4,7 @@ const User = require("../models/User");
 
 const verifyToken = (req, res, next) => {
   const authHeader = req.header("Authorization");
-  console.log(authHeader);
+  console.log("AuthHeader: ", authHeader);
   const token = authHeader && authHeader.split(" ")[1];
 
   if (!token)
@@ -21,30 +21,6 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-// const isOwner = (req, res, next) => {
-//     User.findById(req.userId).exec((error, user) => {
-//         if(error) {
-//             res.status(500).json({ success: false, message: "error"})
-//             return;
-//         }
-
-//         const roles = Role.find({_id: { $in:user.roles}})
-
-//         try {
-//             if(!roles) res.status(403).json({success: false, message: "Require Owner Role"})
-
-//             for(let i = 0; i< roles.length; i++) {
-//                 if(roles[i].name === "owner") {
-//                     next();
-//                     return;
-//                 }
-//             }
-//         } catch (error) {
-//             res.status(500).json({success: false, message: error})
-//         }
-
-//     })
-// }
 
 const isOwner = (req, res, next) => {
   const authHeader = req.header("Authorization");

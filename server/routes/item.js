@@ -49,11 +49,11 @@ router.post("/", [verifyToken, isOwner], async (req, res) => {
 // @desc get item list
 // @access Private
 
-router.get("/", [verifyToken, isOwner], async (req, res) => {
-  if (!req.isOwner)
-    return res
-      .status(401)
-      .json({ success: false, message: "Need Owner permission" });
+router.get("/", [verifyToken], async (req, res) => {
+  // if (!req.isOwner)
+  //   return res
+  //     .status(401)
+  //     .json({ success: false, message: "Need Owner permission" });
   try {
     const itemList = await Item.find({});
     if (!itemList)

@@ -48,7 +48,7 @@ router.post("/", verifyToken, async (req, res) => {
 
 router.get("/", verifyToken, async (req, res) => {
   try {
-    const orderList = await Order.find({});
+    const orderList = await Order.find({}).sort({createAt: 'desc'});
     res.status(200).json({ success: true, orderList });
   } catch (error) {
     console.log(error);

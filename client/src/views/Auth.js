@@ -3,8 +3,12 @@ import LoginForm from "../Components/auth/LoginForm";
 import RegisterForm from "../Components/auth/RegisterForm";
 import { Button, Grid, Paper, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 function Auth({ authRoute }) {
+  const authState = useSelector((state) => state.auth);
+  const { isAuthenticated } = authState; 
   let body;
 
   // body = (
@@ -12,8 +16,8 @@ function Auth({ authRoute }) {
   //     <Spinner animation='border' variant='info' />
   //   </div>
   // )
-  //else if(isAuthenticated) return <Redirect to='/dashboard' />
-  //else
+  if(isAuthenticated) return <Redirect to="/main" />
+  else
   body = (
     <>
       {authRoute === "login" && <LoginForm />}

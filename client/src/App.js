@@ -7,12 +7,13 @@ import { ThemeProvider } from "@material-ui/core";
 import { createTheme } from "@material-ui/core/styles";
 import store from "./redux/store";
 import { actionAuths } from "./redux/actions/actionAuths";
-
+import ProtectedRoute from "./Components/routing/ProtectedRoute";
+import Main from "./views/Main";
+import { loadUser } from "./api/authApi";
 
 function App() {
   useEffect(()=> {
-    console.log("App.js")
-    store.dispatch(actionAuths)
+    loadUser();
   }, []);
 
   return (
@@ -33,6 +34,7 @@ function App() {
             path="/register"
             render={(props) => <Auth {...props} authRoute="register" />}
           />
+          <ProtectedRoute exact path="/main" component={Main}/>
         </Switch>
       </Router>
     </ThemeProvider>
