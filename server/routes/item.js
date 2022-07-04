@@ -2,17 +2,31 @@ const express = require("express");
 const router = express.Router();
 const Item = require("../models/Item");
 const { verifyToken, isOwner } = require("../middleware/auth");
+const fs = require('fs');
+const path = require('path');
+var bodyParser = require('body-parser');
+var multer = require('multer');
 
+var storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname)
+    }
+});
+  
+var upload = multer({ storage: storage }).single('image');
 // @route POST api/item
 // @desc Create item
 // @access Private
 
-router.post("/", [verifyToken, isOwner], async (req, res) => {
+router.post("/", [ upload, verifyToken, isOwner], async (req, res) => {
   if (!req.isOwner)
     return res
       .status(401)
       .json({ success: false, message: "Need Owner permission" });
-  const { name, describe, price, image, stock, tax, category } = req.body;
+  const { name, description, price, image, stock, tax, category } = req.body;
   if (!name)
     res
       .status(401)
@@ -25,9 +39,12 @@ router.post("/", [verifyToken, isOwner], async (req, res) => {
 
     const newItem = new Item({
       name,
-      describe,
+      description,
       price,
-      image,
+      image : {
+        data: fs.readFileSync(path.join('uploads/' + req.file.filename)),
+        contentType: 'image/png'
+      },
       stock,
       tax,
       category,

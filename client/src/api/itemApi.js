@@ -6,7 +6,7 @@ export const getItem = async () => {
     try {
         const response = await axios.get(`${apiURL}/item`);
         if(response.data.success) {
-            console.log(response.data)
+            //console.log(response.data)
             store.dispatch({type: 'LOAD_ITEM_LIST', payload: response.data.itemList})           
         }
     } catch (error) {

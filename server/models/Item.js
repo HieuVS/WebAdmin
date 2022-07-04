@@ -7,8 +7,12 @@ const Item = new Schema({
         required: true,
         unique: true,
     },
+    description: String,
     price: Number,
-    image: String,
+    image: {
+        data: Buffer,
+        contentType: String,
+    },
     stock: Number,
     tax: Boolean,
     category: {
