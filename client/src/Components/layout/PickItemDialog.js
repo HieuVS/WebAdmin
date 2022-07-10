@@ -1,9 +1,9 @@
-import {  Dialog, DialogTitle, Typography, Box, Grid, Avatar, Button } from "@material-ui/core";
+import {  Dialog, DialogTitle, Typography, Box, Grid, Avatar } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getItem } from "../../api/itemApi";
-import React from 'react';
+import { memo } from 'react';
 
 function PickItemDialog(props) {
   const { open, onClose, ...others } = props;
@@ -11,6 +11,10 @@ function PickItemDialog(props) {
   useEffect(() => {
     getItem();
   },[])
+
+  useEffect(() => {
+    setItemPicked(props.itemList)
+  },[open])
 
   const itemList = useSelector((state) => state.item);
   const { items: list } = itemList;
@@ -20,14 +24,11 @@ function PickItemDialog(props) {
   const dessert = list ? list.filter((items)=> items.category==="62bad0e2c49afc2f947d4df7") : [];
   const drinkItem = list ? list.filter((items)=> items.category==="62bad0f5c49afc2f947d4df8") : [];
   const [itemPicked, setItemPicked] = useState([]);
-  console.log('list: ', itemPicked);
+  //console.log('onGetItem: ', itemPicked);
 
   const handlePickItem = (item) => {
-    console.log("Hieu DZ");
-    //let checkExisted = itemPicked.some(element => element.name.includes(item));
     let checkExisted = itemPicked.findIndex(element => element.name.includes(item))
     if(checkExisted===-1) {
-      console.log("NO");
       setItemPicked([...itemPicked, {name : item, quantity: 1}]);
       props.onGetItem([...itemPicked, {name : item, quantity: 1}]);
     }
@@ -38,17 +39,11 @@ function PickItemDialog(props) {
       })
       setItemPicked(newItem);
       props.onGetItem(newItem);
-        // console.log("YES");
-        // itemPicked[checkExisted].quantity +=1;
-    
-        // setItemPicked([...itemPicked]);
+      // itemPicked[checkExisted].quantity +=1;
+      // setItemPicked([...itemPicked]);
     }
 
   }
-
-  // const onPickItem = (item) => {
-  //   props.onGetItem([...itemPicked, item]);
-  // } 
 
   return (
     <Dialog open={open} onClose={onClose} className={classes.pickItemDialog} maxWidth={false} PaperProps={{className: classes.pickItemPaper}}>
@@ -64,6 +59,7 @@ function PickItemDialog(props) {
               const base64String = btoa(new Uint8Array(item.image.data.data).reduce(function (data, byte) {
                 return data + String.fromCharCode(byte);
               }, ''));
+              console.log("Re-render");
               return (
                 <Grid key={item._id} className={classes.gridImg} item lg={3} sm={3} md={3}>
                   <Avatar variant="square" src={`data:image/png;base64,${base64String}`}  className={classes.imgItem}/>
@@ -244,4 +240,10 @@ const useStyle = makeStyles(() => ({
 
   }
 }));
-export default PickItemDialog;
+
+const memoPickItemDialog = memo(PickItemDialog, (props, nextProps) => {
+  //if(nextProps.open === props.open) return true;
+  return props.open === nextProps.open;
+})
+
+export default memoPickItemDialog;

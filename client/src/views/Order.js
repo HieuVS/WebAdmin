@@ -11,6 +11,7 @@ import formatDate from '../utils/formatDate'
 import ConfirmDialog from "../Components/layout/ConfirmDialog";
 import ShowItemDialog from "../Components/layout/ShowItemDialog";
 import AddOrderDialog from "../Components/layout/AddOrderDialog";
+import UpdateOrderDialog from "../Components/layout/UpdateOrderDialog";
 
 
 function Order() {
@@ -26,7 +27,7 @@ function Order() {
   const [item, setItem] = useState(null);
   const [openAddOrder, setOpenAddOrder] = useState(false);
   const [searchItem, setSearchItem] = useState('');
-  
+  const [openUpdate, setOpenUpdate] = useState({});
   
   var listSearchItem = orders.filter((item) => 
     item.customerName.toUpperCase().includes(searchItem.toUpperCase())
@@ -101,7 +102,7 @@ function Order() {
                 <TableCell align="left">{order.phone}</TableCell>
                 <TableCell align="left">{order.address}</TableCell>
                 <TableCell align="left">
-                  <Button id={order._id} onClick={() => onOpenOrderItem(order._id, order.items)}>
+                  <Button className={classes.btnShowItem} id={order._id} onClick={() => onOpenOrderItem(order._id, order.items)}>
                     {order.items[0].name}
                   </Button>
                   {item ? <ShowItemDialog open={openDetail[order._id] ? true: false} onClose={()=>onCloseDialogItem(order._id)} items={item}/> : ''}                 
@@ -116,13 +117,14 @@ function Order() {
                   {order.isTakeAway ? "take away" : "table"}
                 </TableCell>
                 <TableCell align="left" className={classes.btnOption}>
-                  <IconButton >
+                  <IconButton onClick={()=>setOpenUpdate({[order._id]: true})}>
                     <BuildIcon fontSize="medium" />
                   </IconButton>
+                  <UpdateOrderDialog open={openUpdate[order._id] ? true : false} order={order} onClose={()=>setOpenUpdate({[order._id]: false})}/>
                   <IconButton  onClick={()=>onOpenDelete(order._id)}>
                     <DeleteIcon  fontSize="medium" />
                   </IconButton>
-                  <ConfirmDialog open={openDelete[order._id] ? true : false} onClose={()=>setOpenDelete({[order._id]: false})} />
+                  <ConfirmDialog open={openDelete[order._id] ? true : false} orderId={order._id} onClose={()=>setOpenDelete({[order._id]: false})} />
                 </TableCell>
               </TableRow>
             )) 
@@ -205,9 +207,11 @@ const useStyle = makeStyles(() => ({
   orderTable: {
     marginTop: "10px",
   },
-  Table: {},
   btnOption: {
     display: 'flex'
+  },
+  btnShowItem: {
+    textAlign: 'left'
   }
 }));
 export default Order;

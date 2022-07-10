@@ -15,3 +15,38 @@ export const getOrder = async () => {
     }
 }
 
+export const postOrder = async (orderForm) => {
+    try {
+        const response = await axios.post(`${apiURL}/order`, orderForm);
+        if(response.data.success)  {
+            store.dispatch({type: 'POST_ORDER', payload: response.data.order});
+            return response.data;
+        }
+    } catch (error) {
+        return error.response.data ? error.response.data : { success: false, message: 'Server error!'}
+    }
+}
+
+export const deleteOrder = async (orderId) => {
+    try {
+        const response = await axios.delete(`${apiURL}/order/${orderId}`);
+        if(response.data.success)
+            store.dispatch({type: 'DELETE_ORDER', payload: orderId});
+            return response.data;
+    } catch (error) {
+        return error.response.data ? error.response.data : { success: false, message: 'Server error!'}
+    }
+}
+
+export const updateOrder = async (updatedOrder) => {
+    try {
+        const response = await axios.put(`${apiURL}/order/${updatedOrder._id}`, updatedOrder);
+        if(response.data.success) {
+            console.log("PUT: ",response.data)
+            store.dispatch({type: 'UPDATE_ORDER', payload: response.data.order});
+            return response.data;
+        }
+    } catch (error) {
+        return error.response.data ? error.response.data : { success: false, message: 'Server error!'}
+    }
+}

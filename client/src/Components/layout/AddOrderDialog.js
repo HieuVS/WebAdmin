@@ -1,40 +1,91 @@
 import { Button, Dialog, DialogTitle, TextField, Box, RadioGroup, FormControlLabel, Radio, IconButton, Typography, SvgIcon, OutlinedInput, List, ListItem, Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from '@material-ui/icons/Cancel';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PickItemDialog from "./PickItemDialog";
+import WarningMessage from "./WarningMessage";
+import update from 'immutability-helper';
+import { postOrder } from "../../api/orderApi";
 
 function AddOrderDialog(props) {
   const { open, onClose } = props;
   const classes = useStyle();
 
   const [openPickItem, setOpenPickItem] = useState(false);
-  const [items, setItems] = useState()
-  const [count, setCount] = useState({});
+  const [alert, setAlert] = useState(null);
+  const [itemList, setItemList] = useState()
+  const [orderForm, setOrderForm] = useState({
+    customerName: "",
+    phone: "",
+    address: "",
+    items: [],
+    checkTakeAway: "takeaway",
+  });
+  const { customerName, phone, address, items, checkTakeAway } = orderForm;
+  
 
-  const onGetItem = (items) => {
-    setItems(items)
+  const onGetItem = (itemList) => {
+    setItemList(itemList);
+    setOrderForm({...orderForm, items: itemList });
   }
-
+  // console.log("orderForm: ", orderForm);
+  // console.log("list ITEM: ", itemList);
   const onChangeCount = (index, event) => {
-    let value = event.target.value;
-    setCount(value.replace(/\D/,'')[index])
-    // if(parseInt(value)>0 && parseInt(value) <1001) {
-    //     setCount(value.replace(/\D/,''));
-    // } else if (value === "") {
-    //     setCount("")
-    // }
-
+    let value = parseInt(event.target.value.replace(/[^\d]+/g,''));
+    let updatedItem;
+    if(isNaN(value)) updatedItem = update(itemList, {[index]: {quantity: {$set: 1}}}); 
+    else updatedItem = update(itemList, {[index]: {quantity: {$set: value}}}); 
+    setItemList(updatedItem);
+    setOrderForm({...orderForm, items: updatedItem})
+    // let newList = [...itemList];
+    // newList[index].quantity = value;
+    // setItemList(newList);
 }
 
-  const onIncrease = () => {
-      if(count < 999) setCount(count+1) ;
+  const onIncrease = (index, item) => {
+    if(item.quantity < 999) {
+      let updateIncrease = update(itemList, {[index]: {quantity: {$set: itemList[index].quantity+1 }}});
+      setItemList(updateIncrease);
+      setOrderForm({...orderForm, items: updateIncrease})
+    }
   }
 
-  const onDecrease= () => {
-      if(count > 1) setCount(count-1);
+  const onDecrease= (index, item) => {
+    if(item.quantity > 1) {
+      let updateDecrease = update(itemList, {[index]: {quantity: {$set: itemList[index].quantity-1 }}});
+      setItemList(updateDecrease);
+      setOrderForm({...orderForm, items: updateDecrease})
+    }
   }
 
+  const onChangeOrderForm = (event) => {
+    setOrderForm({...orderForm, items: itemList, [event.target.name]: event.target.value })
+  }
+
+  //console.log("orderForm", orderForm);
+  const onAddOrder = async (event) => {
+    event.preventDefault();
+    try {
+      const { success, message } = await postOrder(orderForm);
+      if(!success) {
+        setAlert({ type: "danger", message: message });
+        setTimeout(() => setAlert(null), 5000);
+      }
+      else {
+        console.log("OK ");
+        setOrderForm({
+          customerName: "",
+          phone: "",
+          address: "",
+          items: [],
+          checkTakeAway: "takeaway",
+        })
+        onClose();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <Dialog
       open={open}
@@ -47,20 +98,21 @@ function AddOrderDialog(props) {
           <CancelIcon className={classes.iconClose}/>
         </IconButton>        
         <DialogTitle >Thêm đơn hàng mang đi</DialogTitle>
+        <WarningMessage info={alert}/>
         <Box className={classes.boxAddItem}>
-          <form>
+          <form onSubmit={onAddOrder}>
             <Box >
               <Box className={classes.inputAddInfo}>
-                <TextField label="Họ và tên" className={classes.inputLeft} required></TextField>
-                <TextField label="Số điện thoại" className={classes.inputRight} required></TextField>
+                <TextField label="Họ và tên" className={classes.inputLeft} name="customerName" value={customerName} onChange={onChangeOrderForm} required></TextField>
+                <TextField label="Số điện thoại" className={classes.inputRight} name="phone" value={phone} onChange={onChangeOrderForm} required></TextField>
               </Box>
               <Box className={classes.inputAddInfo}>
-                <TextField label="Địa chỉ" fullWidth required></TextField>
+                <TextField label="Địa chỉ" fullWidth name="address" value={address} onChange={onChangeOrderForm} required></TextField>
               </Box>
               <Box className={classes.inputAddInfo}>
                 <Button onClick={()=>setOpenPickItem(true)}>Chọn sản phẩm</Button>
-                {/* {items ?
-                  <List  className={classes.listItem}>
+                {itemList ?
+                  <List className={classes.listItem}>
                     <Grid container spacing={4} style={{'padding': '8px 16px'}}>
                         <Grid item md={6}>
                           <Typography>Tên sản phẩm</Typography>
@@ -69,18 +121,19 @@ function AddOrderDialog(props) {
                           <Typography>Số lượng</Typography>
                         </Grid>
                     </Grid>
-                    {items.map((item,index) => (
+                    {itemList.map((item,index) => (
                     <ListItem key={index}>
                     <Grid className={classes.amount} container spacing={4}>
                         <Grid item md={6}>
-                          <Typography>{item}</Typography>
+                          <Typography>{item.name}</Typography>
                         </Grid>
                         <Grid item md={6} className={classes.amountBox}>                        
-                          <IconButton className={classes.btnSubPlus} onClick={onDecrease}>
+                          <IconButton className={classes.btnSubPlus} onClick={()=>onDecrease(index, item)}>
                             <SvgIcon><path d="M19 13H5v-2h14v2z"></path></SvgIcon>
                           </IconButton>
-                          <OutlinedInput className={classes.inputAmount} value={count[index]} onChange={event=>onChangeCount(index, event)} />
-                          <IconButton className={classes.btnSubPlus} onClick={onIncrease}>
+                          <OutlinedInput className={classes.inputAmount} value={itemList[index].quantity} onChange={event=>onChangeCount(index, event)} 
+                            inputProps={{min:1, maxLength:3}}/>
+                          <IconButton className={classes.btnSubPlus} onClick={()=>onIncrease(index, item)}>
                             <SvgIcon><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></SvgIcon>
                           </IconButton>                     
                         </Grid>
@@ -89,14 +142,13 @@ function AddOrderDialog(props) {
                     ))}
                   </List>
                      : ''
-                } */}
-                <PickItemDialog open={openPickItem} onClose={()=>setOpenPickItem(false)} onGetItem={onGetItem}/>
-                {console.log('ITEMS: ',items)}
+                }
+                <PickItemDialog open={openPickItem} onClose={()=>setOpenPickItem(false)} itemList={itemList===undefined ? [] : itemList} onGetItem={onGetItem}/>
               </Box>
               <Box className={classes.inputAddInfo}>
-                <RadioGroup className={classes.radioRole} required={true}>
-                  <FormControlLabel className={classes.radio} value="takeaway" name="role" label="Mang đi"  control={<Radio color="primary" />}/>
-                  <FormControlLabel className={classes.radio} value="stay" name="role" label="Ăn tại chỗ"  control={<Radio color="primary"/>}/>
+                <RadioGroup value={checkTakeAway} className={classes.radioRole} required={true}>
+                  <FormControlLabel className={classes.radio} value="takeaway" name="checkTakeAway" label="Mang đi" onChange={onChangeOrderForm}  control={<Radio color="primary" />}/>
+                  <FormControlLabel className={classes.radio} value="stay" name="checkTakeAway" label="Ăn tại chỗ" onChange={onChangeOrderForm}  control={<Radio color="primary"/>}/>
                 </RadioGroup>
               </Box>             
               <Button type="submit" className={classes.btnSubmit}>ORDER</Button>

@@ -8,12 +8,13 @@ const { verifyToken } = require("../middleware/auth");
 // @access Private
 
 router.post("/", verifyToken, async (req, res) => {
-  const { customerName, phone, address, items, isTakeAway } = req.body;
+  const { customerName, phone, address, items, checkTakeAway } = req.body;
   if (!phone)
     res
       .status(401)
       .json({ success: false, message: "Phone is required" });
-  if (isTakeAway === true) {
+  let isTakeAway = checkTakeAway === "takeaway" ? true : false;
+  if (isTakeAway) {
     if (!address && !customerName)
       res.status(401).json({
         success: false,
@@ -31,7 +32,7 @@ router.post("/", verifyToken, async (req, res) => {
     });
 
     await newOrder.save();
-    res.status(200).json({
+    res.status(201).json({
       success: true,
       message: "Add new Order successfully",
       order: newOrder,
@@ -108,7 +109,7 @@ router.delete("/:id", verifyToken, async (req, res) => {
     const deletedOrder = await Order.findOneAndDelete(deleteCondition);
 
     if (!deletedOrder)
-      res.status(401).json({ success: false, message: "Order not found" });
+      res.status(401).json({ success: false, message: "Order not found", orderId: req.params.id });
     res.status(200).json({
       success: true,
       message: "Order deleted successfully",
