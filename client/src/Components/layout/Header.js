@@ -8,6 +8,13 @@ import { logoutUser } from "../../api/authApi";
 import store from "../../redux/store";
 import { useSelector } from 'react-redux'
 import NotificationDialog from "./NotificationDialog";
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import FastfoodIcon from '@material-ui/icons/Fastfood';
+import TrendingUpIcon from '@material-ui/icons/TrendingUp';
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import ListAltIcon from '@material-ui/icons/ListAlt';
+import { Link } from "react-router-dom";
 
 function Header() {
   const classes = useStyle();
@@ -15,21 +22,15 @@ function Header() {
   const [notiDialog, setNotiDialog] = useState(false);
   //const auth = store.getState();
   const auth = useSelector(state => state.auth)
-  //console.log("isOwner: ", !auth.user.isOwner);
+  //console.log("isOwner: ", auth.user);
 
   const onLogout = () => logoutUser();
-  // const list = (
-  //   <List>
-  //     {["Owner Mode", "Logout"].map((item, index) => (
-  //       <ListItem button key={index}>
-  //         <ListItemIcon></ListItemIcon>
-  //         <ListItemText>
-  //           <Typography variant="h6">{item}</Typography>
-  //         </ListItemText>
-  //       </ListItem>
-  //     ))}
-  //   </List>
-  // );
+
+  const onRedirectTo = (page) => {
+    console.log("OKE BABE", page)
+    return <Link to={page} />
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Grid
@@ -78,16 +79,63 @@ function Header() {
               <Box>
                 <List>
                   {auth.user.isOwner ? (
-                    <ListItem button>
-                      <ListItemIcon></ListItemIcon>
-                      <ListItemText>
-                        <Typography variant="h6">Owner Mode</Typography>
-                      </ListItemText>
-                    </ListItem>
+                    <Box>
+                      <ListItem button>
+                      <Link to='/item' >
+                        <ListItemIcon className={classes.iconMode}>
+                          <FastfoodIcon />
+                        </ListItemIcon>
+                        <ListItemText>
+                          <Typography className={classes.btnMode} variant="h6">Quản lý sản phẩm</Typography>
+                        </ListItemText>
+                      </Link>
+                      </ListItem>
+                      <ListItem button >
+                        <Link to='/staff' >
+                          <ListItemIcon className={classes.iconMode}>
+                          <SupervisorAccountIcon />
+                          </ListItemIcon>
+                          <ListItemText>
+                            <Typography className={classes.btnMode} variant="h6">Quản lý nhân viên</Typography>
+                          </ListItemText>
+                        </Link>                        
+                      </ListItem>
+                      <ListItem button>
+                        <ListItemIcon className={classes.iconMode}>
+                          <ListAltIcon />
+                        </ListItemIcon>
+                        <ListItemText>
+                          <Typography className={classes.btnMode} variant="h6">Quản lý đặt bàn</Typography>
+                        </ListItemText>
+                      </ListItem>
+                      <ListItem button>
+                        <ListItemIcon className={classes.iconMode}>
+                          <MonetizationOnIcon />
+                        </ListItemIcon>
+                        <ListItemText>
+                          <Typography className={classes.btnMode} variant="h6">Quản lý khuyến mại</Typography>
+                        </ListItemText>
+                      </ListItem>
+                      <ListItem button>
+                        <ListItemIcon className={classes.iconMode}>
+                          <AttachMoneyIcon />
+                        </ListItemIcon>
+                        <ListItemText>
+                          <Typography className={classes.btnMode} variant="h6">Quản lý chi phí</Typography>
+                        </ListItemText>
+                      </ListItem>
+                      <ListItem button>
+                        <ListItemIcon className={classes.iconMode}>
+                          <TrendingUpIcon />
+                        </ListItemIcon>
+                        <ListItemText>
+                          <Typography className={classes.btnMode} variant="h6">Thống kê</Typography>
+                        </ListItemText>
+                      </ListItem>
+                    </Box>
                   ) : null}
-                  <ListItem button onClick={onLogout}>
-                    <ListItemIcon></ListItemIcon>
-                    <ListItemText>
+                  <ListItem button onClick={onLogout}>                    
+                    <ListItemText className={classes.btnLogout}>
                       <Typography variant="h6">Logout</Typography>
                     </ListItemText>
                   </ListItem>
@@ -105,7 +153,7 @@ const useStyle = makeStyles(() => ({
     width: "100%",
     height: "8vh",
     display: "flex",
-    backgroundColor: "green",
+    backgroundColor: '#20B2AA',
   },
   logo: {
     width: "6%",
@@ -134,8 +182,20 @@ const useStyle = makeStyles(() => ({
     minHeight: "28px",
   },
   iconMenu: {
-    paddingRight: "10px",
+    marginRight: "10px",
   },
+  iconMode: {
+    minWidth: '38px'
+  },
+  btnMode: {
+    //textAlign: 'center',
+    whiteSpace: 'nowrap'
+  },
+  btnLogout: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 }));
 
 const theme = createTheme({

@@ -2,16 +2,22 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const Staff = new Schema({
+    Ecode: {
+        type: String,
+        required: true,
+    },
     name: {
         type: String,
         required: true,
     },
-    age: Number,
+    DoB: String,
     phone: String,
-    maNV: {
-        type: String,
-        required: true,
+    birthPlace: String,
+    joinDate: {
+        type: Date,
+        default: Date.now,
     },
+    role: String
 })
 
 module.exports = mongoose.model('staffs', Staff);

@@ -26,12 +26,13 @@ router.post("/", [ upload, verifyToken, isOwner], async (req, res) => {
     return res
       .status(401)
       .json({ success: false, message: "Need Owner permission" });
-  const { name, description, price, image, stock, tax, category } = req.body;
+  const { name, description, price, image, stock, isTax, category } = req.body;
+  console.log('REQUSET:', req.file)
   if (!name)
     res
       .status(401)
       .json({ success: false, message: "Item's name is required" });
-
+  const tax = isTax === 'Yes' ? true : false;
   try {
     const item = await Item.findOne({ name });
     if (item)

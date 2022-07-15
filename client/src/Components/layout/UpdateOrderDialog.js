@@ -25,7 +25,7 @@ function UpdateOrderDialog(props) {
     setItemList(order.items);
   }, []);
 
-  console.log("orderForm: ", orderForm);
+  //console.log("orderForm: ", orderForm);
   // console.log("itemList: ", itemList);
 
   const onGetItem = (itemList) => {

@@ -11,19 +11,22 @@ const crypto = require("crypto");
 router.post("/", [verifyToken, isOwner], async (req, res) => {
   if(!req.isOwner) return res.status(401).json({success: false, message: "Need Owner permission"});
 
-  const { name, age, phone } = req.body;
+  const { name, DoB, phone, birthPlace, joinDate, role } = req.body;
   if (!name)
     res
       .status(401)
       .json({ success: false, message: "Staff's name is required" });
 
-  var id = "A" + crypto.randomBytes(3).toString("hex").toUpperCase();
+  var id = "A" + crypto.randomBytes(4).toString("hex").toUpperCase();
   try {
     const newStaff = new Staff({
+      Ecode: id,
       name,
-      age,
+      DoB,
       phone,
-      maNV: id,
+      birthPlace,
+      joinDate,
+      role
     });
     await newStaff.save();
     res
@@ -61,7 +64,7 @@ router.get("/", [verifyToken, isOwner], async (req, res) => {
 
 router.put("/:id", [verifyToken, isOwner], async (req, res) => {
   if(!req.isOwner) return res.status(401).json({success: false, message: "Need Owner permission"});
-  const { name, age, phone } = req.body;
+  const { name, DoB, phone, birthPlace, joinDate, role } = req.body;
   if (!name)
     res
       .status(401)
@@ -70,8 +73,11 @@ router.put("/:id", [verifyToken, isOwner], async (req, res) => {
   try {
     let updatedStaff = {
       name,
-      age,
+      DoB,
       phone,
+      birthPlace,
+      joinDate,
+      role
     };
 
     updatedStaff = await Staff.findOneAndUpdate(

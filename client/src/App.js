@@ -4,12 +4,18 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Landing from "./Components/layout/Landing";
 import Auth from "./views/Auth";
 import { ThemeProvider } from "@material-ui/core";
-import { createTheme } from "@material-ui/core/styles";
+import { createTheme, makeStyles } from "@material-ui/core/styles";
 import store from "./redux/store";
 import { actionAuths } from "./redux/actions/actionAuths";
 import ProtectedRoute from "./Components/routing/ProtectedRoute";
 import Main from "./views/Main";
+import Staff from "./views/Staff";
+import Item from "./views/Item";
 import { loadUser } from "./api/authApi";
+import Header from "./Components/layout/Header";
+import Footer from './Components/layout/Footer';
+import Table from "./views/Table";
+import Charge from "./views/Charge";
 
 function App() {
   useEffect(()=> {
@@ -34,8 +40,29 @@ function App() {
             path="/register"
             render={(props) => <Auth {...props} authRoute="register" />}
           />
+          <ProtectedRoute
+            exact
+            path="/staff"
+            component={Staff}
+          />
+          <ProtectedRoute
+            exact
+            path="/item"
+            component={Item}
+          />
+          <ProtectedRoute
+            exact
+            path="/table"
+            component={Table}
+          />
+          <ProtectedRoute
+            exact
+            path="/charge"
+            component={Charge}
+          />
           <ProtectedRoute exact path="/main" component={Main}/>
         </Switch>
+        <Footer />
       </Router>
     </ThemeProvider>
   );

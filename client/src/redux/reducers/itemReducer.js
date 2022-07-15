@@ -10,6 +10,11 @@ const itemReducer = (state = initialState, action) => {
             ...state,
             items: payload
         }
+        case 'CREATE_ITEM': 
+        return {
+            ...state,
+            items: [...state.items, payload]
+        }
         default:
         return state;
     }

@@ -19,10 +19,10 @@ function PickItemDialog(props) {
   const itemList = useSelector((state) => state.item);
   const { items: list } = itemList;
   //console.log("List item: ",list);
-  const appetizer = list ? list.filter((items)=> items.category==="62bad0d3c49afc2f947d4df6") : [];
-  const mainCourse = list ? list.filter((items)=> items.category==="62bad0c2c49afc2f947d4df5") : [];
-  const dessert = list ? list.filter((items)=> items.category==="62bad0e2c49afc2f947d4df7") : [];
-  const drinkItem = list ? list.filter((items)=> items.category==="62bad0f5c49afc2f947d4df8") : [];
+  const appetizer = list ? list.filter((items)=> items.category==="62d101d59bec899dad2a626a") : [];
+  const mainCourse = list ? list.filter((items)=> items.category==="62d101c59bec899dad2a6269") : [];
+  const dessert = list ? list.filter((items)=> items.category==="62d101e09bec899dad2a626b") : [];
+  const drinkItem = list ? list.filter((items)=> items.category==="62d101ed9bec899dad2a626c") : [];
   const [itemPicked, setItemPicked] = useState([]);
   //console.log('onGetItem: ', itemPicked);
 

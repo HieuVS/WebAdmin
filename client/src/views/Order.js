@@ -16,7 +16,7 @@ import UpdateOrderDialog from "../Components/layout/UpdateOrderDialog";
 
 function Order() {
   useEffect(() => {
-    console.log("hello")
+    //console.log("hello")
     getOrder();
   }, []);
   const orderList = useSelector((state) => state.order);
