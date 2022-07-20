@@ -5,10 +5,15 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import store from '../src/redux/store';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns'; // choose your lib
+import viLocale from "date-fns/locale/vi";
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={viLocale}>
+      <App />
+    </MuiPickersUtilsProvider>
   </Provider>,
   document.getElementById("root")
 );

@@ -6,18 +6,22 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import { memo } from 'react';
 import BuildIcon from '@material-ui/icons/Build';
 import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteItemDialog from "./DeleteItemDialog";
+import UpdateItemDialog from "./UpdateItemDialog";
+import { imageToBase64 } from '../../../constants/imageToBase64';
 
 function ItemListDialog(props) {
-  const { open, onClose, dishesId, title } = props;
+  const { open, onClose, dishesId, title, type } = props;
   const classes = useStyle();
   
   const itemList = useSelector((state) => state.item);
   const { items: list } = itemList;
   //console.log("List item: ",list);
   const dish = list ? list.filter((items)=> items.category===dishesId) : [];
-  
-  console.log('dishesId:', list)
+  const [openDeleteItem, setOpenDeleteItem] = useState({});
+  const [openUpdateItem, setOpenUpdateItem] = useState({});
 
+  console.log('dishesId:', list)
 
   return (
     <Dialog open={open} className={classes.pickItemDialog} maxWidth={false} PaperProps={{className: classes.pickItemPaper}}>
@@ -33,24 +37,26 @@ function ItemListDialog(props) {
           <Grid container>
           {
             dish.map(item => {
-              const base64String = btoa(new Uint8Array(item.image.data.data).reduce(function (data, byte) {
-                return data + String.fromCharCode(byte);
-              }, ''));
+              // const base64String = btoa(new Uint8Array(item.image.data.data).reduce(function (data, byte) {
+              //   return data + String.fromCharCode(byte);
+              // }, ''));
               console.log("Re-render");
               return (
                 <Grid key={item._id} className={classes.gridImg} item lg={3} sm={3} md={3}>
-                  <Avatar variant="square" src={`data:image/png;base64,${base64String}`}  className={classes.imgItem}/>
+                  <Avatar variant="square" src={`data:image/png;base64,${imageToBase64(item.image.data.data)}`}  className={classes.imgItem}/>
                   <Box className={classes.itemInfo}>
                     <Typography className={classes.itemName} variant='h5'>{item.name}</Typography>
                     <Box className={classes.addItemBox}>
                       <Typography className={classes.itemPrice} variant='h6'>{item.price}</Typography>
                       <Box className={classes.itemBtnAdd} id="toolBox" onClick={()=>{}}>
-                        <IconButton className={classes.btnTool}>
+                        <IconButton onClick={()=>setOpenUpdateItem({[item._id]:true})}  className={classes.btnTool}>
                           <BuildIcon  fontSize="small" />
                         </IconButton>
-                        <IconButton className={classes.btnTool}>
+                        <IconButton onClick={()=>setOpenDeleteItem({[item._id]: true})} className={classes.btnTool}>
                           <DeleteIcon  fontSize="small" />
                         </IconButton>
+                        <UpdateItemDialog open={openUpdateItem[item._id] ? true : false} onClose={()=>setOpenUpdateItem({[item._id]: false})} item={item} type={type}/>
+                        <DeleteItemDialog open={openDeleteItem[item._id] ? true : false} onClose={()=>setOpenDeleteItem({[item._id]: false})} itemId={item._id}/>
                       </Box>
                     </Box>
                   </Box>

@@ -29,7 +29,7 @@ function ConfirmDialog(props) {
     <Dialog onClose={onClose} open={open} PaperProps={{className: classes.confirmPaper}}>
       <DialogTitle className={classes.titleConfirm}>CONFIRMATION</DialogTitle>
       <WarningMessage info={alert}/>
-      <Box>
+      <Box className={classes.contentDelete}>
         <Typography className={classes.confirmMessage}>Bạn có chắc muốn xoá nhân viên không?</Typography>
       </Box>  
       <Box className={classes.btnConfirm}>
@@ -58,6 +58,9 @@ const useStyle = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'center',
     margin: '8px 0'
+  },
+  contentDelete: {
+    padding: '10px'
   }
 }));
 

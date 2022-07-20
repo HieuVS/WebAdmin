@@ -49,4 +49,4 @@ export const updateOrder = async (updatedOrder) => {
     } catch (error) {
         return error.response.data ? error.response.data : { success: false, message: 'Server error!'}
     }
-}
+} 

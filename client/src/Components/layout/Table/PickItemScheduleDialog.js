@@ -1,21 +1,21 @@
 import {  Dialog, DialogTitle, Typography, Box, Grid, Avatar } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { useEffect, useState } from "react";
+import { useEffect, useState, forwardRef, useImperativeHandle, useMemo } from "react";
 import { useSelector } from "react-redux";
-import { getItem } from "../../api/itemApi";
+import { getItem } from '../../../api/itemApi';
 import { memo } from 'react';
+import store from "../../../redux/store";
 
-function PickItemDialog(props) {
-  const { open, onClose, ...others } = props;
+const PickItemScheduleDialog = forwardRef((props,ref) => {
+  const { tableId } = props;
   const classes = useStyle();
+
   useEffect(() => {
     getItem();
   },[])
 
-  useEffect(() => {
-    setItemPicked(props.itemList)
-  },[open])
-
+  //console.log('Re=Render PickItemScheduleDialog');
+  
   const itemList = useSelector((state) => state.item);
   const { items: list } = itemList;
   //console.log("List item: ",list);
@@ -24,29 +24,61 @@ function PickItemDialog(props) {
   const dessert = list ? list.filter((items)=> items.category==="62d101e09bec899dad2a626b") : [];
   const drinkItem = list ? list.filter((items)=> items.category==="62d101ed9bec899dad2a626c") : [];
   const [itemPicked, setItemPicked] = useState([]);
-  //console.log('onGetItem: ', itemPicked);
+  const [open, setOpen] = useState(false);
+  
+  //console.log('itemPicked: ', itemPicked);
+  
+  useImperativeHandle(ref, ()=> ({
+    openItem: handleOpenItem,
+  }))
+  const handleOpenItem = () => {
+    if(Array.isArray(items) && items.length !== 0) setItemPicked(items)
+    setOpen(true);
+  }
+
+  const scheduleList = useSelector((state) => state.schedule);
+  console.log('scheduleList: ', scheduleList);
+  
+  const itemSchedule = scheduleList.schedule.filter((item) => 
+    item.table._id === tableId
+  );
+  //console.log('itemSchedule', itemSchedule)
+
+  const items = itemSchedule[0] ? itemSchedule[0].items : [];
+  //console.log('items? ', items)
+
+  // useMemo(()=> {
+
+  // },[items])
+  // useEffect (()=> {
+  //   if(itemPicked.length === 0)
+  //   setItemPicked(items);
+  // })
 
   const handlePickItem = (item) => {
     let checkExisted = itemPicked.findIndex(element => element.name.includes(item))
     if(checkExisted===-1) {
+      //console.log("chua co item")
       setItemPicked([...itemPicked, {name : item, quantity: 1}]);
-      props.onGetItem([...itemPicked, {name : item, quantity: 1}]);
+      store.dispatch({type: 'UPDATE_ITEM_SCHEDULE', payload: [...itemPicked, {name : item, quantity: 1}], id: tableId })
+
+    //props.onGetItem([...itemPicked, {name : item, quantity: 1}]);
     }
     else {
+      //console.log("Da co item")
       const newItem = itemPicked.map(element => {
         if(element.name===item) return {...element,  quantity: element.quantity +1 }
           return element;
       })
       setItemPicked(newItem);
-      props.onGetItem(newItem);
-      // itemPicked[checkExisted].quantity +=1;
-      // setItemPicked([...itemPicked]);
+      store.dispatch({type: 'UPDATE_ITEM_SCHEDULE', payload: newItem, id: tableId })
+      //props.onGetItem(newItem);
     }
 
   }
 
   return (
-    <Dialog open={open} onClose={onClose} className={classes.pickItemDialog} maxWidth={false} PaperProps={{className: classes.pickItemPaper}}>
+    <Dialog open={open} onClose={()=>setOpen(false)} className={classes.pickItemDialog} maxWidth={false} PaperProps={{className: classes.pickItemPaper}}>
       <DialogTitle>Chọn sản phẩm bạn muốn</DialogTitle>
       <Box style={{paddingLeft :'40px', paddingRight: '40px'}}>
         <Box className={classes.mealContainer}>
@@ -161,7 +193,7 @@ function PickItemDialog(props) {
       </Box>
     </Dialog>
   );
-}
+})
 
 const useStyle = makeStyles(() => ({
   pickItemPaper: {
@@ -244,7 +276,7 @@ const useStyle = makeStyles(() => ({
   }
 }));
 
-const memoPickItemDialog = memo(PickItemDialog, (props, nextProps) => {
+const memoPickItemDialog = memo(PickItemScheduleDialog, (props, nextProps) => {
   //if(nextProps.open === props.open) return true;
   return props.open === nextProps.open;
 })

@@ -13,12 +13,12 @@ router.post("/", [verifyToken, isOwner], async (req, res) => {
       .status(401)
       .json({ success: false, message: "Need Owner permission" });
 
-  const { code, discount } = req.body;
-  if (!code || !discount)
+  const { code, discountCent } = req.body;
+  if (!code || !discountCent)
     res
       .status(401)
       .json({ success: false, message: "Code and discount is required" });
-
+  const discount = discountCent/100;
   try {
     const newDiscount = new Discount({
       code,

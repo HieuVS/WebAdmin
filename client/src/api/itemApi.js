@@ -27,9 +27,10 @@ export const postItem = async (itemForm) => {
     }
 }
 
-export const putItem = async (item) => {
+export const putItem = async (updatedItem, updatedItemId) => {
+    console.log('updatedItem: ',updatedItem)
     try {
-        const response = await axios.put(`${apiURL}/item/${item._id}`, item);
+        const response = await axios.put(`${apiURL}/item/${updatedItemId}`, updatedItem);
         if(response.data.success) {
             //console.log(response.data)
             store.dispatch({type: 'UPDATE_ITEM', payload: response.data.item});

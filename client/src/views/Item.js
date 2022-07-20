@@ -52,7 +52,7 @@ function Item() {
             <ListItem button onClick={()=>onOpenItemList(item._id)}  className={classes.itemCategory}>
               <Typography>{item.type}</Typography>
             </ListItem>
-            <ItemListDialog open={openItemList[item._id] ? true: false} dishesId={item._id} title={item.type} onClose={()=>setOpenItemList({[item._id]: false})}/>
+            <ItemListDialog open={openItemList[item._id] ? true: false} dishesId={item._id} title={item.type} type={type} onClose={()=>setOpenItemList({[item._id]: false})}/>
             <IconButton  onClick={()=>onOpenDelete(item._id)}>
               <DeleteIcon  fontSize="medium" />
             </IconButton>

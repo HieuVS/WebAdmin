@@ -41,7 +41,7 @@ export default function AddItemDialog(props) {
     data.append('stock',stock);
     data.append('isTax',isTax);
     data.append('category',category);
-    //console.log('DATA: ', data)
+    console.log('DATA: ', data)
     try {
       const { success, message } = await postItem(data);
         if(!success) {
@@ -100,8 +100,7 @@ export default function AddItemDialog(props) {
               <TextField label="Số lượng" value={stock} name="stock" onChange={onChangeAddItem} fullWidth variant="outlined" type="number"/>
             </Grid>
             <IconButton variant="contained" component="label" className={classes.btnUpload}>
-              <CloudUploadIcon style={{marginRight: '10px'}}/>
-              <label for="image">Upload File</label>
+              <CloudUploadIcon style={{marginRight: '10px'}}/>Upload File
               <input type="file" fieldname="image" id="image" name="image" onChange={onGetImage} hidden />
             </IconButton>
             <Grid item md={12} style={{marginTop: '5px'}} className={classes.inputAddInfo}>

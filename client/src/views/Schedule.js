@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { useEffect, useState } from "react";
-import { Box, Grid, Typography, Paper, IconButton, Button } from "@material-ui/core";
+import { useEffect, useState, useRef } from "react";
+import { Box, Grid, Typography, Paper, IconButton } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
@@ -8,23 +8,24 @@ import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import { getTable } from "../api/tableApi";
 import formatDate from '../utils/formatDate';
 import AddTableDialog from "../Components/layout/Table/AddTableDialog";
-import BuildIcon from '@material-ui/icons/Build';
 import DeleteTableDialog from "../Components/layout/Table/DeleteTableDialog";
-import UpdateTableDialog from "../Components/layout/Table/UpdateTableDialog";
+import AddScheduleDialog from "../Components/layout/Table/AddScheduleDialog";
+import logo from '../assets/image/logo.png';
+import store from "../redux/store";
 
-function Table() {
+function Schedule() {
   const classes = useStyle();
-
+  const ref = useRef();
   useEffect(() => {
     getTable();
   }, []);
   const tableList = useSelector((state) => state.table);
-  //console.log("tableList: ", tableList);
-
+  //console.log('Re=Render Schedule');
   const [openDelete, setOpenDelete] = useState({});
-  const [openUpdateTable, setOpenUpdateTable] = useState({})
   const [openCreateTable, setOpenCreateTable] = useState(false);
+  const [openAddSchedule, setOpenAddSchedule] = useState(false);
   const [type, setType] = useState('Inactive');
+  const [tableId, setTableId] = useState('');
 
   const getTableType = () => {
     if(tableList.tables) {
@@ -35,7 +36,19 @@ function Table() {
   }  
 
   const filteredTable = getTableType();
-  
+  const scheduleList = useSelector(state => state.schedule);
+
+  const onOpenAddSchedule = (item) => {
+    ref.current?.open(item._id);
+    setTableId(item._id)
+    //setOpenAddSchedule({[item._id]: true});
+    if(!scheduleList.schedule.some(schedule=> schedule.table._id === item._id)) {
+    //if(!scheduleList.schedule.hasOwnProperty(item._id)) {
+      console.log("DISPATCH");
+      store.dispatch({type: `SET_DATA_SCHEDULE`, payload: { table: item}, id: item._id} )
+    }
+  }
+
   return (
     <Paper className={classes.paperContainer}>
       <Box className={classes.categoryHeader}>
@@ -66,7 +79,7 @@ function Table() {
         {filteredTable.length !== 0 ? getTableType().map((item) => {
           return (
               <Grid key={item._id} item md={4} lg={4} className={classes.itemDiscount}>
-                <Paper className={classes.paperItem}>
+                <Paper className={classes.paperItem} onClick={()=>onOpenAddSchedule(item)}>
                   {type === 'Active' ? (
                     <Box className={classes.boxStatus}>
                       <FiberManualRecordIcon className={classes.iconActive}/>
@@ -80,7 +93,8 @@ function Table() {
                   )}
                   
                   <Box className={classes.tableNumber}>
-                    <Typography variant="h5" className={classes.itemTitle}>Bàn số: {item.number}</Typography>
+                    <Typography variant="h5" className={classes.itemTitle}>Bàn số:</Typography>
+                    <Typography variant="h3" className={classes.numberTable}>{item.number}</Typography>
                   </Box>
                   <Box className={classes.contentDiscount}>
                     <Typography variant="h5" className={classes.itemTitle}>Giờ đặt: {formatDate(item.startAt)}</Typography>
@@ -89,20 +103,17 @@ function Table() {
                     <Typography variant="h5" className={classes.itemTitle}>Số người: {item.headCount}</Typography>
                   </Box>
                   <Box className={classes.deleteDiscount}>
-                    <IconButton onClick={()=>setOpenUpdateTable({[item._id]:true})}  className={classes.btnTool}>
-                      <BuildIcon  fontSize="medium" />
-                    </IconButton>
                     <IconButton  onClick={()=>setOpenDelete({[item._id]: true})}>
                       <DeleteIcon  fontSize="medium" />
                     </IconButton>
                   </Box>
                   <DeleteTableDialog open={openDelete[item._id] ? true: false} tableId={item._id} onClose={()=>setOpenDelete({[item._id]: false})}/>
-                  <UpdateTableDialog open={openUpdateTable[item._id] ? true: false} onClose={()=>setOpenUpdateTable({[item._id]: false})} item={item} />
                 </Paper>
               </Grid>            
           );
         }) : (<Typography style={{padding: '10px 20px'}} variant="h4">Hiện chưa có bàn nào.</Typography>)
       }
+        <AddScheduleDialog ref={ref} tableId={tableId} />
       </Grid>
     </Paper>
   );
@@ -135,9 +146,13 @@ const useStyle = makeStyles(() => ({
     boxShadow: '7px 7px 1px -1px rgb(0 0 0 / 20%)',
     height: '160px',
     padding: '20px',
-    // '&:hover': {
-    //     color: '#EF5845'
-    // }
+    '&:hover': {
+        cursor: 'pointer',
+        //backgroundImage: `url(${logo})`,
+        // backgroundSize: 'cover',
+        // backgroundPosition: 'center',
+        // backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%), url(${logo})`
+    }
   },
   itemTitle: {
     color: '#008080'
@@ -146,14 +161,20 @@ const useStyle = makeStyles(() => ({
     float: 'right'
   },
   tableNumber: {
-    marginTop: '10px'
+    marginTop: '10px',
+    display: 'flex', 
+    alignItems: 'center'
+  },
+  numberTable: {
+    fontFamily: 'Bahnschrift SemiBold',
+    marginLeft: '8px'
   },
   contentDiscount: {
     //marginTop: '10px'
   },
   deleteDiscount: {
     position: 'absolute',
-    top: '7px',
+    top: '3px',
     right: '1px'
   },
   title: {
@@ -187,4 +208,4 @@ const useStyle = makeStyles(() => ({
   }
 }));
 
-export default Table;
+export default Schedule;

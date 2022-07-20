@@ -15,7 +15,8 @@ import { loadUser } from "./api/authApi";
 import Header from "./Components/layout/Header";
 import Footer from './Components/layout/Footer';
 import Table from "./views/Table";
-import Charge from "./views/Charge";
+import Discount from "./views/Discount";
+import Schedule from "./views/Schedule";
 
 function App() {
   useEffect(()=> {
@@ -57,8 +58,13 @@ function App() {
           />
           <ProtectedRoute
             exact
-            path="/charge"
-            component={Charge}
+            path="/Schedule"
+            component={Schedule}
+          />
+          <ProtectedRoute
+            exact
+            path="/discount"
+            component={Discount}
           />
           <ProtectedRoute exact path="/main" component={Main}/>
         </Switch>

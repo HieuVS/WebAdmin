@@ -14,6 +14,7 @@ import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import ListAltIcon from '@material-ui/icons/ListAlt';
+import HomeIcon from '@material-ui/icons/Home';
 import { Link } from "react-router-dom";
 
 function Header() {
@@ -26,11 +27,6 @@ function Header() {
 
   const onLogout = () => logoutUser();
 
-  const onRedirectTo = (page) => {
-    console.log("OKE BABE", page)
-    return <Link to={page} />
-  }
-
   return (
     <ThemeProvider theme={theme}>
       <Grid
@@ -39,7 +35,7 @@ function Header() {
         justifyContent="center"
         className={classes.header}
       >
-        <Grid item lg={10} className={classes.gridHeader}>
+        <Grid item lg={1} md={1} sm={1} className={classes.gridHeader}>
           <Avatar
             alt="logo"
             variant="square"
@@ -47,14 +43,20 @@ function Header() {
             src={logo}
           />
         </Grid>
-        <Grid item lg={1} className={classes.gridHeader}>
-          <Typography className={classes.user}>Hello {auth.user.username}</Typography>
+        <Grid item lg={9} md={9} sm={9}/>
+        <Grid item lg={1} md={1} sm={1} className={classes.gridHeader}>
+          <Typography className={classes.user}>
+            Hello {auth.user.username}
+          </Typography>
         </Grid>
-        <Grid item lg={1} className={classes.gridHeader}>
-          <IconButton onClick={()=>setNotiDialog(true)}>
+        <Grid item lg={1} md={1} sm={1} className={classes.gridHeader}>
+          <IconButton onClick={() => setNotiDialog(true)}>
             <NotificationsIcon />
           </IconButton>
-          <NotificationDialog open={notiDialog} onClose={()=>setNotiDialog(false)}/>
+          <NotificationDialog
+            open={notiDialog}
+            onClose={() => setNotiDialog(false)}
+          />
           <IconButton onClick={() => setIsOpen(true)}>
             <SvgIcon
               className={classes.iconRate}
@@ -78,63 +80,84 @@ function Header() {
               </Box>
               <Box>
                 <List>
+                  <ListItem button component={Link} to="/">
+                    <ListItemIcon className={classes.iconMode}>
+                      <HomeIcon />
+                    </ListItemIcon>
+                    <ListItemText>
+                      <Typography className={classes.btnMode} variant="h6">
+                        Trang chủ
+                      </Typography>
+                    </ListItemText>
+                  </ListItem>
                   {auth.user.isOwner ? (
                     <Box>
-                      <ListItem button>
-                      <Link to='/item' >
+                      <ListItem button component={Link} to="/item">
                         <ListItemIcon className={classes.iconMode}>
                           <FastfoodIcon />
                         </ListItemIcon>
                         <ListItemText>
-                          <Typography className={classes.btnMode} variant="h6">Quản lý sản phẩm</Typography>
+                          <Typography className={classes.btnMode} variant="h6">
+                            Quản lý sản phẩm
+                          </Typography>
                         </ListItemText>
-                      </Link>
                       </ListItem>
-                      <ListItem button >
-                        <Link to='/staff' >
-                          <ListItemIcon className={classes.iconMode}>
+                      <ListItem button component={Link} to="/staff">
+                        <ListItemIcon className={classes.iconMode}>
                           <SupervisorAccountIcon />
-                          </ListItemIcon>
-                          <ListItemText>
-                            <Typography className={classes.btnMode} variant="h6">Quản lý nhân viên</Typography>
-                          </ListItemText>
-                        </Link>                        
+                        </ListItemIcon>
+                        <ListItemText>
+                          <Typography className={classes.btnMode} variant="h6">
+                            Quản lý nhân viên
+                          </Typography>
+                        </ListItemText>
                       </ListItem>
-                      <ListItem button>
+                      <ListItem button component={Link} to="/table">
                         <ListItemIcon className={classes.iconMode}>
                           <ListAltIcon />
                         </ListItemIcon>
                         <ListItemText>
-                          <Typography className={classes.btnMode} variant="h6">Quản lý đặt bàn</Typography>
+                          <Typography className={classes.btnMode} variant="h6">
+                            Quản lý đặt bàn
+                          </Typography>
                         </ListItemText>
                       </ListItem>
-                      <ListItem button>
+                      <ListItem button component={Link} to="/discount">
                         <ListItemIcon className={classes.iconMode}>
                           <MonetizationOnIcon />
                         </ListItemIcon>
                         <ListItemText>
-                          <Typography className={classes.btnMode} variant="h6">Quản lý khuyến mại</Typography>
+                          <Typography className={classes.btnMode} variant="h6">
+                            Quản lý khuyến mại
+                          </Typography>
                         </ListItemText>
                       </ListItem>
-                      <ListItem button>
-                        <ListItemIcon className={classes.iconMode}>
-                          <AttachMoneyIcon />
-                        </ListItemIcon>
-                        <ListItemText>
-                          <Typography className={classes.btnMode} variant="h6">Quản lý chi phí</Typography>
-                        </ListItemText>
-                      </ListItem>
-                      <ListItem button>
+                      <ListItem button component={Link} to="">
                         <ListItemIcon className={classes.iconMode}>
                           <TrendingUpIcon />
                         </ListItemIcon>
                         <ListItemText>
-                          <Typography className={classes.btnMode} variant="h6">Thống kê</Typography>
+                          <Typography className={classes.btnMode} variant="h6">
+                            Thống kê
+                          </Typography>
                         </ListItemText>
                       </ListItem>
                     </Box>
-                  ) : null}
-                  <ListItem button onClick={onLogout}>                    
+                  ) : (
+                    <Box>
+                      <ListItem button component={Link} to="/Schedule">
+                        <ListItemIcon className={classes.iconMode}>
+                          <ListAltIcon />
+                        </ListItemIcon>
+                        <ListItemText>
+                          <Typography className={classes.btnMode} variant="h6">
+                            Đặt bàn
+                          </Typography>
+                        </ListItemText>
+                      </ListItem>
+                    </Box>
+                  )}
+                  <ListItem button onClick={onLogout}>
                     <ListItemText className={classes.btnLogout}>
                       <Typography variant="h6">Logout</Typography>
                     </ListItemText>
@@ -156,8 +179,8 @@ const useStyle = makeStyles(() => ({
     backgroundColor: '#20B2AA',
   },
   logo: {
-    width: "6%",
-    heigh: "100%",
+    width: "80%",
+    height: "100%",
   },
   gridHeader: {
     height: "100%",
@@ -185,17 +208,18 @@ const useStyle = makeStyles(() => ({
     marginRight: "10px",
   },
   iconMode: {
-    minWidth: '38px'
+    minWidth: '38px',
+    alignItems: 'center'
   },
   btnMode: {
-    //textAlign: 'center',
+    textDecoration: 'none',
     whiteSpace: 'nowrap'
   },
   btnLogout: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
-  }
+  },
 }));
 
 const theme = createTheme({

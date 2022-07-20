@@ -1,18 +1,18 @@
 import { Button, Dialog, DialogTitle, Box, Typography,} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { deleteType } from "../../../api/categoryApi";
+import { deleteDiscount } from "../../../api/discountApi";
 import { useState } from 'react';
 import WarningMessage from "../WarningMessage";
 
-function DeleteCategoryTypeDialog(props) {
-  const { onClose, open, typeId } = props;
+function DeleteDiscountDialog(props) {
+  const { onClose, open, discountId } = props;
   const classes = useStyle();
   const [alert, setAlert] = useState(null);
   
-  const onDeleteType = async (typeId) => {
-    console.log("typeId:", typeId)
+  const onDeleteDiscount = async (discountId) => {
+    console.log("discountId:", discountId)
     try {
-      const response = await deleteType(typeId);
+      const response = await deleteDiscount(discountId);
       console.log(response)
       if (!response.success) {
         setAlert({ type: "danger", message: response.message });
@@ -30,10 +30,10 @@ function DeleteCategoryTypeDialog(props) {
       <DialogTitle className={classes.titleConfirm}>CONFIRMATION</DialogTitle>
       <WarningMessage info={alert}/>
       <Box className={classes.contentDelete}>
-        <Typography className={classes.confirmMessage}>Bạn có chắc muốn xoá danh mục không?</Typography>
+        <Typography className={classes.confirmMessage}>Bạn có chắc muốn xoá mã khuyến mại này không?</Typography>
       </Box>  
       <Box className={classes.btnConfirm}>
-        <Button onClick={()=>onDeleteType(typeId)}>Có</Button>
+        <Button onClick={()=>onDeleteDiscount(discountId)}>Có</Button>
         <Button onClick={onClose}>Không</Button>
       </Box>
     </Dialog>
@@ -64,4 +64,4 @@ const useStyle = makeStyles(() => ({
   }
 }));
 
-export default DeleteCategoryTypeDialog;
+export default DeleteDiscountDialog;

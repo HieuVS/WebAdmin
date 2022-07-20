@@ -2,24 +2,24 @@ import axios from "axios";
 import { apiURL } from "../constants/api.constant";
 import store from "../redux/store";
 
-export const getType = async () => {
+export const getDiscount = async () => {
     try {
-        const response = await axios.get(`${apiURL}/category`);
+        const response = await axios.get(`${apiURL}/discount`);
         if(response.data.success) {
             //console.log(response.data)
-            store.dispatch({type: 'LOAD_CATEGORY', payload: response.data.category})           
+            store.dispatch({type: 'LOAD_DISCOUNT', payload: response.data.discountList})           
         }
     } catch (error) {
         return error.response.data ? error.response.data : { success: false, message: 'Server error!'}
     }
 }
 
-export const postType = async (type) => {
+export const createDiscount = async (discount) => {
     try {
-        const response = await axios.post(`${apiURL}/category`,type);
+        const response = await axios.post(`${apiURL}/discount`,discount);
         if(response.data.success) {
             //console.log(response.data)
-            store.dispatch({type: 'ADD_CATEGORY', payload: response.data.type})     
+            store.dispatch({type: 'ADD_DISCOUNT', payload: response.data.discount})     
             return response.data;      
         }
     } catch (error) {
@@ -27,12 +27,12 @@ export const postType = async (type) => {
     }
 }
 
-export const deleteType = async (id) => {
+export const deleteDiscount = async (id) => {
     try {
-        const response = await axios.delete(`${apiURL}/category/${id}`);
+        const response = await axios.delete(`${apiURL}/discount/${id}`);
         if(response.data.success) {
             //console.log(response.data)
-            store.dispatch({type: 'DELETE_CATEGORY_TYPE', payload: id})          
+            store.dispatch({type: 'DELETE_DISCOUNT', payload: id})          
             return response.data; 
         }
     } catch (error) {

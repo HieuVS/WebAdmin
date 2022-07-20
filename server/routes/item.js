@@ -21,7 +21,7 @@ var upload = multer({ storage: storage }).single('image');
 // @desc Create item
 // @access Private
 
-router.post("/", [ upload, verifyToken, isOwner], async (req, res) => {
+router.post("/", [ verifyToken, isOwner], async (req, res) => {
   if (!req.isOwner)
     return res
       .status(401)
@@ -37,15 +37,15 @@ router.post("/", [ upload, verifyToken, isOwner], async (req, res) => {
     const item = await Item.findOne({ name });
     if (item)
       res.status(401).json({ success: false, message: "Duplicated Item" });
-
+    const checkImage = image.data.data ? image : {
+      data: fs.readFileSync(path.join('uploads/' + req.file.filename)),
+      contentType: 'image/png'
+    }
     const newItem = new Item({
       name,
       description,
       price,
-      image : {
-        data: fs.readFileSync(path.join('uploads/' + req.file.filename)),
-        contentType: 'image/png'
-      },
+      image : checkImage,
       stock,
       tax,
       category,
@@ -87,31 +87,32 @@ router.get("/", [verifyToken], async (req, res) => {
 // @desc Update an item by id
 // @access Private
 
-router.put("/:id", [verifyToken, isOwner], async (req, res) => {
+router.put("/:id", [upload, verifyToken, isOwner], async (req, res) => {
   if (!req.isOwner)
     return res
       .status(401)
       .json({ success: false, message: "Need Owner permission" });
   //console.log(req.query);
-  if (req.query.reduce) {
-    console.log("hjhj: ",req.query);
-    try {
-      let item = await Item.findOneAndUpdate(
-        { _id: req.params.id },
-        { $inc: { stock: -req.query.reduce } }
-      );
-      return res
-        .status(200)
-        .json({ success: true, message: "Update Item'stock", item });
-    } catch (error) {
-      console.log("Hehe: ",error)
-      res
-        .status(500)
-        .json({ success: false, message: "Internal server error!" });
-    }
-  }
+  // if (req.query.reduce) {
+  //   console.log("hjhj: ",req.query);
+  //   try {
+  //     let item = await Item.findOneAndUpdate(
+  //       { _id: req.params.id },
+  //       { $inc: { stock: -req.query.reduce } }
+  //     );
+  //     return res
+  //       .status(200)
+  //       .json({ success: true, message: "Update Item'stock", item });
+  //   } catch (error) {
+  //     console.log("Hehe: ",error)
+  //     res
+  //       .status(500)
+  //       .json({ success: false, message: "Internal server error!" });
+  //   }
+  // }
 
-  const { name, describe, price, image, stock, tax } = req.body;
+  const { name, description, price, image, stock, isTax, category } = req.body;
+  const tax = isTax === 'Yes' ? true : false;
   if (!name)
     res
       .status(401)
@@ -119,13 +120,17 @@ router.put("/:id", [verifyToken, isOwner], async (req, res) => {
   try {
     let updatedItem = {
       name,
-      describe,
+      description,
       price,
-      image,
+      image : {
+        data: fs.readFileSync(path.join('uploads/' + req.file.filename)),
+        contentType: 'image/png'
+      },
       stock,
       tax,
+      category
     };
-
+    console.log('updatedItem ',updatedItem)
     updatedItem = await Item.findOneAndUpdate(
       { _id: req.params.id },
       updatedItem,

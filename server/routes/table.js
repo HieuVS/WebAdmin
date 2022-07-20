@@ -7,8 +7,8 @@ const { verifyToken } = require("../middleware/auth");
 // @access Private
 
 router.post("/", [verifyToken], async (req, res) => {
-  const { isActive, headcount, startAt, table } = req.body;
-  if (isActive === false || !table)
+  const { isActive, headCount, startAt, number } = req.body;
+  if (isActive === true || !number)
     res.status(401).json({
       success: false,
       message: "Table's being used or table id is missing",
@@ -16,10 +16,9 @@ router.post("/", [verifyToken], async (req, res) => {
   try {
     const newTable = new Table({
       isActive: true,
-      headcount,
+      headCount,
       startAt,
-      endAt: "",
-      table,
+      number,
     });
 
     await newTable.save();
@@ -59,15 +58,52 @@ router.get("/", [verifyToken], async (req, res) => {
 // @access Private
 
 router.put("/:id", verifyToken, async (req, res) => {
-  const { isActive, headcount, endAt } = req.body;
+  const { active, headCount, startAt, number  } = req.body;
+
+  if (active === undefined)
+    res.status(401).json({ success: false, message: "isActive is required" });
+  let isActive = active === 'true' ? true : false
+  try {
+    let updatedTable = {
+      isActive,
+      headCount,
+      startAt,
+      number,
+    };
+
+    updatedTable = await Table.findOneAndUpdate(
+      { _id: req.params.id },
+      updatedTable,
+      { new: true }
+    );
+    if (!updatedTable)
+      res.status(401).json({ success: false, message: "Table not found" });
+    res.status(200).json({
+      success: true,
+      message: "Table updated successfully",
+      table: updatedTable,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
+// @route PUT api/table/payment/:id
+// @desc UPDATE table infomation
+// @access Private
+
+router.put("/payment/:id", verifyToken, async (req, res) => {
+  const { isActive, headCount, startAt, number  } = req.body;
 
   if (isActive === false)
     res.status(401).json({ success: false, message: "Table is not actived" });
   try {
     let updatedTable = {
       isActive: false,
-      headcount,
-      endAt: endAt || Date.now(),
+      headCount,
+      startAt,
+      number,
     };
 
     updatedTable = await Table.findOneAndUpdate(
