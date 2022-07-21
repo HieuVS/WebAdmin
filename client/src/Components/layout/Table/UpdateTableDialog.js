@@ -22,7 +22,7 @@ export default function UpdateTableDialog({ open, item, onClose }) {
   const onChangeDiscountForm = (event) => {
     setTableForm({ ...tableForm, [event.target.name]: event.target.value });
   };
-  console.log("tableForm: ", item);
+  //console.log("tableForm: ", item);
 
   const onUpdateTable = async (e) => {
     e.preventDefault();

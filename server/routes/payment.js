@@ -8,9 +8,9 @@ const Payment = require("../models/Payment");
 // @access Private
 
 router.post("/", verifyToken, async (req, res) => {
-  const { items, charge, discount, totalAmount, tax, type, customer } = req.body;
+  const { items, charge, discount, totalAmount, tax, isTakeAway, customer } = req.body;
 
-  if (!items || !charge)
+  if (!items)
     res.status(401).json({ success: false, message: "Items are required" });
 
   try {
@@ -20,7 +20,7 @@ router.post("/", verifyToken, async (req, res) => {
       discount,
       totalAmount,
       tax,
-      type,
+      isTakeAway,
       customer,
     });
 

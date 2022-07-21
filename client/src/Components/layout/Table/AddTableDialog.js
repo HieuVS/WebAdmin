@@ -31,8 +31,8 @@ export default function AddTableDialog({ open, onClose }) {
       if(!success) console.log('Error: ', message)
       else {
         setTableForm({
-          code: '',
-          headCount: Number,
+          number: 1,
+          headCount: 1,
           startAt: Date
         })
       console.log('add successfully')

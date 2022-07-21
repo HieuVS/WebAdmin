@@ -16,10 +16,7 @@ const Payment = new Schema({
     },
     totalAmount: Number,
     tax: Number,
-    type: {
-        type: String,
-        enum: ['table', 'takeaway'],
-    },
+    isTakeAway:  Boolean,
     customer: Object,
     createAt: {
         type: Date,

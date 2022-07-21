@@ -10,7 +10,6 @@ import formatDate from '../utils/formatDate';
 import AddTableDialog from "../Components/layout/Table/AddTableDialog";
 import DeleteTableDialog from "../Components/layout/Table/DeleteTableDialog";
 import AddScheduleDialog from "../Components/layout/Table/AddScheduleDialog";
-import logo from '../assets/image/logo.png';
 import store from "../redux/store";
 
 function Schedule() {
@@ -25,7 +24,7 @@ function Schedule() {
   const [openCreateTable, setOpenCreateTable] = useState(false);
   const [openAddSchedule, setOpenAddSchedule] = useState(false);
   const [type, setType] = useState('Inactive');
-  const [tableId, setTableId] = useState('');
+  const [table, setTable] = useState('');
 
   const getTableType = () => {
     if(tableList.tables) {
@@ -39,8 +38,8 @@ function Schedule() {
   const scheduleList = useSelector(state => state.schedule);
 
   const onOpenAddSchedule = (item) => {
-    ref.current?.open(item._id);
-    setTableId(item._id)
+    ref.current?.open();
+    setTable(item)
     //setOpenAddSchedule({[item._id]: true});
     if(!scheduleList.schedule.some(schedule=> schedule.table._id === item._id)) {
     //if(!scheduleList.schedule.hasOwnProperty(item._id)) {
@@ -113,7 +112,7 @@ function Schedule() {
           );
         }) : (<Typography style={{padding: '10px 20px'}} variant="h4">Hiện chưa có bàn nào.</Typography>)
       }
-        <AddScheduleDialog ref={ref} tableId={tableId} />
+        <AddScheduleDialog ref={ref} table={table} />
       </Grid>
     </Paper>
   );

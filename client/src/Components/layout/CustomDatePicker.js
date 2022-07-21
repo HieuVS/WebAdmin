@@ -13,7 +13,7 @@ export default function CustomDatePicker(props) {
   const { onGetDate, label, type } = props;
   const classes = useStyle();
   const [selectedDate, setSelectedDate] = useState(new Date());
-  //console.log("selectedDate: ",selectedDate)
+  console.log("selectedDate: ",selectedDate)
   const returnState = () => {
     console.log(selectedDate)
   }
@@ -106,8 +106,8 @@ export default function CustomDatePicker(props) {
         </div>
       )}
       selected={selectedDate}
-      onSelect={(event) =>handleDateSelect(selectedDate,event)}
-      onChange={(date) => setSelectedDate(date)}
+      onSelect={(date ) => setSelectedDate(date)}
+      // onChange={(date) => setSelectedDate(date)}
     />
   );
 }

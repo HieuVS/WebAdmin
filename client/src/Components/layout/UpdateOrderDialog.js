@@ -18,7 +18,7 @@ function UpdateOrderDialog(props) {
     ...order,
     isTakeAway: order.isTakeAway ? "takeaway" : "stay",
   });
-  const { customerName, phone, address, items, isTakeAway } = orderForm;
+  const { name, phone, address, items, isTakeAway } = orderForm;
 
   useEffect(() => {
     //console.log("hehe")
@@ -110,8 +110,8 @@ function UpdateOrderDialog(props) {
                 <TextField
                   label="Họ và tên"
                   className={classes.inputLeft}
-                  name="customerName"
-                  value={customerName}
+                  name="name"
+                  value={name}
                   onChange={onChangeOrderForm}
                   required
                 ></TextField>

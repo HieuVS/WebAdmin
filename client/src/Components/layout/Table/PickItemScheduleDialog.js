@@ -56,18 +56,19 @@ const PickItemScheduleDialog = forwardRef((props,ref) => {
   // })
 
   const handlePickItem = (item) => {
-    let checkExisted = itemPicked.findIndex(element => element.name.includes(item))
+    const { name, price } = item;
+    let checkExisted = itemPicked.findIndex(element => element.name.includes(name))
     if(checkExisted===-1) {
-      //console.log("chua co item")
-      setItemPicked([...itemPicked, {name : item, quantity: 1}]);
-      store.dispatch({type: 'UPDATE_ITEM_SCHEDULE', payload: [...itemPicked, {name : item, quantity: 1}], id: tableId })
+      console.log("chua co item")
+      setItemPicked([...itemPicked, {name : name, quantity: 1, price : price, amount: price}]);
+      store.dispatch({type: 'UPDATE_ITEM_SCHEDULE', payload: [...itemPicked, {name : name, quantity: 1, price : price, amount: price}], id: tableId })
 
     //props.onGetItem([...itemPicked, {name : item, quantity: 1}]);
     }
     else {
-      //console.log("Da co item")
+      console.log("Da co item")
       const newItem = itemPicked.map(element => {
-        if(element.name===item) return {...element,  quantity: element.quantity +1 }
+        if(element.name === name) return {...element, quantity: element.quantity +1, amount: element.price*(element.quantity + 1) }
           return element;
       })
       setItemPicked(newItem);
@@ -99,7 +100,7 @@ const PickItemScheduleDialog = forwardRef((props,ref) => {
                     <Typography className={classes.itemName} variant='h5'>{item.name}</Typography>
                     <Box className={classes.addItemBox}>
                       <Typography className={classes.itemPrice} variant='h6'>{item.price}</Typography>
-                      <Typography className={classes.itemBtnAdd} variant='button' onClick={()=>{handlePickItem(item.name)}}>Thêm vào giỏ hàng</Typography>
+                      <Typography className={classes.itemBtnAdd} variant='button' onClick={()=>{handlePickItem(item)}}>Thêm vào giỏ hàng</Typography>
                     </Box>
                   </Box>
                 </Grid>
@@ -125,7 +126,7 @@ const PickItemScheduleDialog = forwardRef((props,ref) => {
                     <Typography className={classes.itemName} variant='h5'>{item.name}</Typography>
                     <Box className={classes.addItemBox}>
                       <Typography className={classes.itemPrice} variant='h6'>{item.price}</Typography>
-                      <Typography className={classes.itemBtnAdd} variant='button' onClick={()=>{handlePickItem(item.name)}}>Thêm vào giỏ hàng</Typography>
+                      <Typography className={classes.itemBtnAdd} variant='button' onClick={()=>{handlePickItem(item)}}>Thêm vào giỏ hàng</Typography>
                     </Box>
                   </Box>
                 </Grid>
@@ -151,7 +152,7 @@ const PickItemScheduleDialog = forwardRef((props,ref) => {
                     <Typography className={classes.itemName} variant='h5'>{item.name}</Typography>
                     <Box className={classes.addItemBox}>
                       <Typography className={classes.itemPrice} variant='h6'>{item.price}</Typography>
-                      <Typography className={classes.itemBtnAdd} variant='button' onClick={()=>{handlePickItem(item.name)}}>Thêm vào giỏ hàng</Typography>
+                      <Typography className={classes.itemBtnAdd} variant='button' onClick={()=>{handlePickItem(item)}}>Thêm vào giỏ hàng</Typography>
                     </Box>
                   </Box>
                 </Grid>
@@ -178,7 +179,7 @@ const PickItemScheduleDialog = forwardRef((props,ref) => {
                     <Typography className={classes.itemName} variant='h5'>{item.name}</Typography>
                     <Box className={classes.addItemBox}>
                       <Typography className={classes.itemPrice} variant='h6'>{item.price}</Typography>
-                      <Typography className={classes.itemBtnAdd} variant='button' onClick={()=>{handlePickItem(item.name)}}>Thêm vào giỏ hàng</Typography>
+                      <Typography className={classes.itemBtnAdd} variant='button' onClick={()=>{handlePickItem(item)}}>Thêm vào giỏ hàng</Typography>
                     </Box>
                   </Box>
                 </Grid>

@@ -4,10 +4,13 @@ import store from "../redux/store";
 
 
 export const updateTablePay = async (updatedTable) => {
+    //console.log('updatedTable ',updatedTable)
+
     try {
         const response = await axios.put(`${apiURL}/table/payment/${updatedTable._id}`, updatedTable);
         if(response.data.success) {
-            store.dispatch({type: 'UPDATE_TABLE_PAY', payload: response.data.table})
+            console.log('res',response.data.message)
+            store.dispatch({type: 'UPDATE_TABLE', payload: response.data.table})
             return response.data;
         }
     } catch (error) {
@@ -16,8 +19,9 @@ export const updateTablePay = async (updatedTable) => {
 }
 
 export const makeOrderSchedule = async (scheduleForm) => {
+    //console.log('OrderSchedule ',scheduleForm)
     try {
-        const response = axios.post(`${apiURL}/order`, scheduleForm);
+        const response = await axios.post(`${apiURL}/order`, scheduleForm);
         if(response.data.success)  {
             store.dispatch({type: 'POST_ORDER', payload: response.data.order});
             return response.data;
@@ -28,10 +32,11 @@ export const makeOrderSchedule = async (scheduleForm) => {
 }
 
 export const makePaymentSchedule = async (scheduleForm) => {
+    console.log('PaymentSchedule ',scheduleForm)
     try {
-        const response = axios.post(`${apiURL}/payment`, scheduleForm);
+        const response = await axios.post(`${apiURL}/payment`, scheduleForm);
         if(response.data.success)  {
-            store.dispatch({type: 'CREATE_PAYMENT', payload: response.data.payment});
+            //store.dispatch({type: 'CREATE_PAYMENT', payload: response.data.payment});
             return response.data;
         }
     } catch (error) {

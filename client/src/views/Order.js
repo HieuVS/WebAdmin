@@ -21,7 +21,7 @@ function Order() {
   }, []);
   const orderList = useSelector((state) => state.order);
   const { order: orders } = orderList;
-  
+  console.log(orders)
   const [openDelete, setOpenDelete] = useState({});
   const [openDetail, setOpenDetail] = useState({});
   const [item, setItem] = useState(null);
@@ -30,7 +30,7 @@ function Order() {
   const [openUpdate, setOpenUpdate] = useState({});
   
   var listSearchItem = orders.filter((item) => 
-    item.customerName.toUpperCase().includes(searchItem.toUpperCase())
+    item.name.toUpperCase().includes(searchItem.toUpperCase())
   );
 
   const onOpenDelete = (id) => {
@@ -98,7 +98,7 @@ function Order() {
             {!searchItem ? orders.map((order) => (
               <TableRow key={order._id}>
                 <TableCell align="left">{order._id}</TableCell>
-                <TableCell align="left">{order.customerName}</TableCell>
+                <TableCell align="left">{order.name}</TableCell>
                 <TableCell align="left">{order.phone}</TableCell>
                 <TableCell align="left">{order.address}</TableCell>
                 <TableCell align="left">
@@ -133,7 +133,7 @@ function Order() {
               listSearchItem.map((order) => (
                 <TableRow key={order._id}>
                 <TableCell align="left">{order._id}</TableCell>
-                <TableCell align="left">{order.customerName}</TableCell>
+                <TableCell align="left">{order.name}</TableCell>
                 <TableCell align="left">{order.phone}</TableCell>
                 <TableCell align="left">{order.address}</TableCell>
                 <TableCell align="left">

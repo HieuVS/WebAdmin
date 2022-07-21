@@ -2,13 +2,17 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema
 
 const Order = new Schema({
-    customerName: String,
+    name: String,
     phone: {
         type: String,
         required: true,
     },
     address: String,
     items: Array,
+    discount: {
+        type: Schema.Types.ObjectId,
+        ref:'discounts',
+    },
     createAt: {
         type: Date,
         default: Date.now,

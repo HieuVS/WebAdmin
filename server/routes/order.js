@@ -8,27 +8,28 @@ const { verifyToken } = require("../middleware/auth");
 // @access Private
 
 router.post("/", verifyToken, async (req, res) => {
-  const { customerName, phone, address, items, checkTakeAway } = req.body;
+  const { name, phone, address, items, checkTakeAway, discount } = req.body;
   if (!phone)
     res
       .status(401)
       .json({ success: false, message: "Phone is required" });
   let isTakeAway = checkTakeAway === "takeaway" ? true : false;
   if (isTakeAway) {
-    if (!address && !customerName)
+    if (!address && !name)
       res.status(401).json({
         success: false,
-        message: "address and customerName is required for takeaway",
+        message: "address and name is required for takeaway",
       });
   }
 
   try {
     const newOrder = new Order({
-      customerName,
+      name,
       phone,
       address,
       items,
       isTakeAway,
+      discount
     });
 
     await newOrder.save();
@@ -62,22 +63,22 @@ router.get("/", verifyToken, async (req, res) => {
 // @access Private
 
 router.put("/:id", verifyToken, async (req, res) => {
-  const { customerName, phone, address, items, isTakeAway } = req.body;
+  const { name, phone, address, items, isTakeAway } = req.body;
   if (!phone)
     res
       .status(401)
       .json({ success: false, message: "Phone is required" });
   if (isTakeAway === true) {
-    if (!address && !customerName)
+    if (!address && !name)
       res.status(401).json({
         success: false,
-        message: "address and customerName is required for takeaway",
+        message: "address and name is required for takeaway",
       });
   }
 
   try {
     let updatedOrder = {
-      customerName,
+      name,
       phone,
       address,
       items,

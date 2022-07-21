@@ -11,7 +11,7 @@ const scheduleReducer = (state = initialState, action) => {
                 schedule: [...state.schedule, payload]
             }
         case 'UPDATE_ITEM_SCHEDULE' :
-            console.log("HOHO", payload);
+            //console.log("HOHO", payload);
             const newItemList = state.schedule.map(item => {
                 if(item.table._id === id) return {
                     ...item,
@@ -19,7 +19,7 @@ const scheduleReducer = (state = initialState, action) => {
                 }
                 return item
             })
-            console.log('newItem REDUCER:', newItemList)
+            //console.log('newItem REDUCER:', newItemList)
             return {
                 ...state,
                 schedule: newItemList

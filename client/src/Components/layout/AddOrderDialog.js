@@ -15,13 +15,13 @@ function AddOrderDialog(props) {
   const [alert, setAlert] = useState(null);
   const [itemList, setItemList] = useState()
   const [orderForm, setOrderForm] = useState({
-    customerName: "",
+    name: "",
     phone: "",
     address: "",
     items: [],
     checkTakeAway: "takeaway",
   });
-  const { customerName, phone, address, items, checkTakeAway } = orderForm;
+  const { name, phone, address, items, checkTakeAway } = orderForm;
   
 
   const onGetItem = (itemList) => {
@@ -74,7 +74,7 @@ function AddOrderDialog(props) {
       else {
         console.log("OK ");
         setOrderForm({
-          customerName: "",
+          name: "",
           phone: "",
           address: "",
           items: [],
@@ -103,7 +103,7 @@ function AddOrderDialog(props) {
           <form onSubmit={onAddOrder}>
             <Box >
               <Box className={classes.inputAddInfo}>
-                <TextField label="Họ và tên" className={classes.inputLeft} name="customerName" value={customerName} onChange={onChangeOrderForm} required></TextField>
+                <TextField label="Họ và tên" className={classes.inputLeft} name="name" value={name} onChange={onChangeOrderForm} required></TextField>
                 <TextField label="Số điện thoại" className={classes.inputRight} name="phone" value={phone} onChange={onChangeOrderForm} required></TextField>
               </Box>
               <Box className={classes.inputAddInfo}>
