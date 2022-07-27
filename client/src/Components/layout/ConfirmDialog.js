@@ -28,7 +28,7 @@ function ConfirmDialog(props) {
       <DialogTitle className={classes.titleConfirm}>CONFIRMATION</DialogTitle>
       <WarningMessage info={alert}/>
       <Box className={classes.contentDelete}>
-        <Typography className={classes.confirmMessage}>Bạn có chắc muốn xoá sản phẩm không?</Typography>
+        <Typography className={classes.confirmMessage}>Bạn có chắc muốn xoá đơn hàng không?</Typography>
       </Box>  
       <Box className={classes.btnConfirm}>
         <Button onClick={()=>onDeleteOrder(orderId)}>Có</Button>

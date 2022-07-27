@@ -10,12 +10,12 @@ const Staff = new Schema({
         type: String,
         required: true,
     },
-    DoB: String,
+    DoB: Date,
+    address: String,
     phone: String,
     birthPlace: String,
     joinDate: {
         type: Date,
-        default: Date.now,
     },
     role: String
 })

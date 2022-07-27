@@ -6,10 +6,18 @@ import PickItemDialog from "./PickItemDialog";
 import WarningMessage from "./WarningMessage";
 import update from 'immutability-helper';
 import { postOrder } from "../../api/orderApi";
+import { getDiscount } from "../../api/discountApi";
+import { useSelector } from "react-redux";
 
 function AddOrderDialog(props) {
   const { open, onClose } = props;
   const classes = useStyle();
+
+  useEffect(()=> {
+    getDiscount()
+  },[])
+
+  const discountList = useSelector((state) => state.discount);
 
   const [openPickItem, setOpenPickItem] = useState(false);
   const [alert, setAlert] = useState(null);
@@ -108,6 +116,9 @@ function AddOrderDialog(props) {
               </Box>
               <Box className={classes.inputAddInfo}>
                 <TextField label="Địa chỉ" fullWidth name="address" value={address} onChange={onChangeOrderForm} required></TextField>
+              </Box>
+              <Box className={classes.inputAddInfo}>
+                <TextField label="Mã giảm giá" name="" ></TextField>
               </Box>
               <Box className={classes.inputAddInfo}>
                 <Button onClick={()=>setOpenPickItem(true)}>Chọn sản phẩm</Button>

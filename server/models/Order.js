@@ -20,7 +20,8 @@ const Order = new Schema({
     isTakeAway: {
         type: Boolean,
         required: true
-    }
+    },
+    tableId: String
 })
 
 module.exports = mongoose.model('orders', Order)

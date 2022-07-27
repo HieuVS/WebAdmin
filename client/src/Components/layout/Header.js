@@ -132,7 +132,7 @@ function Header() {
                           </Typography>
                         </ListItemText>
                       </ListItem>
-                      <ListItem button component={Link} to="">
+                      <ListItem button component={Link} to="/statistic">
                         <ListItemIcon className={classes.iconMode}>
                           <TrendingUpIcon />
                         </ListItemIcon>
@@ -145,7 +145,7 @@ function Header() {
                     </Box>
                   ) : (
                     <Box>
-                      <ListItem button component={Link} to="/Schedule">
+                      <ListItem button component={Link} to="/schedule">
                         <ListItemIcon className={classes.iconMode}>
                           <ListAltIcon />
                         </ListItemIcon>
@@ -176,11 +176,14 @@ const useStyle = makeStyles(() => ({
     width: "100%",
     height: "8vh",
     display: "flex",
-    backgroundColor: '#20B2AA',
+    //backgroundColor: '#20B2AA',
+    padding: '0 70px',
+    borderBottom: '2px solid #f3f3f4',
+    //boxShadow: '0 0 2px'
   },
   logo: {
-    width: "80%",
-    height: "100%",
+    width: "65%",
+    height: "90%",
   },
   gridHeader: {
     height: "100%",

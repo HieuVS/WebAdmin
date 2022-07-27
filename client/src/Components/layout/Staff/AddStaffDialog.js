@@ -4,50 +4,43 @@ import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from '@material-ui/icons/Cancel';
 import { useState } from "react";
 import WarningMessage from "../WarningMessage";
-import update from 'immutability-helper';
 import { createStaff } from "../../../api/staffApi";
-import CustomDatePicker from "../CustomDatePicker";
+import TodayIcon from '@material-ui/icons/Today';
+import { DatePicker } from "@material-ui/pickers";
+import { formatDay } from "../../../utils/formatDate";
 
 function AddOrderDialog(props) {
   const { open, onClose } = props;
   const classes = useStyle();
   const [alert, setAlert] = useState(null);
   const [staffForm, setStaffForm] = useState({
-    employeeName: '',
+    name: '',
     phone: '',
     DoB: null,
     birthPlace: '',
     joinDate: null,
     role: 'Staff'
   });
-  const { employeeName, phone, DoB, birthPlace, joinDate, role } = staffForm;
+  const { name, phone, DoB, birthPlace, joinDate, role } = staffForm;
 
-  // console.log("staffForm: ", staffForm);
-  const onGetDate = (date, type) => {
-    if(type ==='DoB') setStaffForm({...staffForm, birthPlace: date});
-    else if (type === 'joinDate') setStaffForm({...staffForm, joinDate: date});
-    else console.log("Error type: ", type);
+
+  const [selectedDoB, setSelectedDoB] = useState(new Date());
+  const [selectedJoinDate, setSelectedJoinDate] = useState(new Date());
+  const [openDoB, setOpenDoB] = useState(false);
+  const [openJoinDate, setOpenJoinDate] = useState(false);
+
+  const onChangeDoB = (date) => {
+    setSelectedDoB(date);
+    setStaffForm({...staffForm, DoB: selectedDoB})
   }
-  const [sinhNhat, setSinhNhat] = useState();
-  const [ngayVao, setNgayVao] = useState();
-  const onGetSinhNhat = (date) => {
-
-  }
-
-  const onGetNgayVao = (date) => {
-
-  }
-
-  const getDoB = React.useRef();
-  const getJoinDate = React.useRef()
-
-  const onGetDate2 = () => {
-    getDoB.current.returnState();
+  console.log('selectedDoB:', selectedDoB)
+  console.log('selectedJoinDate:', selectedJoinDate)
+  
+  const onChangeJoinDate = (date) => {
+    setSelectedJoinDate(date);
+    setStaffForm({...staffForm, joinDate: selectedJoinDate})
   }
 
-  const onGetDate3 = () => {
-    getJoinDate.current.returnState();
-  }
 
   const onChangestaffForm = (event) => {
     setStaffForm({...staffForm, [event.target.name]: event.target.value })
@@ -67,11 +60,12 @@ function AddOrderDialog(props) {
       else {
         console.log("OK ");
         setStaffForm({
-          customerName: "",
-          phone: "",
-          address: "",
-          items: [],
-          checkTakeAway: "takeaway",
+          name: '',
+          phone: '',
+          DoB: null,
+          birthPlace: '',
+          joinDate: null,
+          role: 'Staff'
         })
         onClose();
       }
@@ -79,8 +73,6 @@ function AddOrderDialog(props) {
       console.log(error);
     }
   }
-  console.log('DoB:', DoB)
-  console.log('joinDate:', joinDate)
 
   return (
     <Dialog
@@ -99,18 +91,30 @@ function AddOrderDialog(props) {
           <form onSubmit={onAddOrder}>
             <Grid container spacing={1}>
               <Grid item md={6} className={classes.inputAddInfo}>
-                <TextField label="Họ và tên" value={employeeName} className={classes.inputLeft} name="employeeName"  onChange={onChangestaffForm} required></TextField>
+                <TextField label="Họ và tên" value={name} className={classes.inputLeft} name="name"  onChange={onChangestaffForm} required></TextField>
               </Grid>
               <Grid item md={6} className={classes.inputAddInfo}>
-                <CustomDatePicker ref={getDoB} label="Ngày sinh" onGetDate={onGetDate} type="DoB" name="DoB" pickDate='DoB'/>
-                <Button onClick={onGetDate2}/>
+                <Box className={classes.customInput} >
+                  <Box >
+                    <TextField value={formatDay(DoB)} label="Ngày sinh nhật" className={classes.inputDate} />
+                  </Box>
+                  <Box className={classes.calendarIcon}>
+                    <TodayIcon fontSize="large" onClick={()=>setOpenDoB(true)} style={{fontSize: '27px'}} />
+                  </Box>
+                </Box>
               </Grid>
               <Grid item md={6} className={classes.inputAddInfo}>
                 <TextField label="Số điện thoại" value={phone} className={classes.inputRight} name="phone"  onChange={onChangestaffForm} required></TextField>
               </Grid>
               <Grid item md={6} className={classes.inputAddInfo}>
-                <CustomDatePicker ref={getJoinDate} label="Ngày vào công ty" onGetDate={onGetDate} type="joinDate" name="joinDate"/>
-                <Button onClick={onGetDate3}/>
+                <Box className={classes.customInput} >
+                  <Box >
+                    <TextField value={formatDay(joinDate)} label="Ngày vào công ty" className={classes.inputDate} />
+                  </Box>
+                  <Box className={classes.calendarIcon}>
+                    <TodayIcon fontSize="large" onClick={()=>setOpenJoinDate(true)} style={{fontSize: '27px'}} />
+                  </Box>
+                </Box>
               </Grid>
               <Grid item md={12} className={classes.inputAddInfo}>
                 <TextField label="Quê quán" value={birthPlace} fullWidth name="birthPlace"  onChange={onChangestaffForm} required></TextField>               
@@ -119,13 +123,59 @@ function AddOrderDialog(props) {
                 <RadioGroup value={role} className={classes.radioRole} required={true}>
                   <FormControlLabel className={classes.radio} value="Owner" name="role" label="Owner" onChange={onChangestaffForm} control={<Radio color="primary" />}/>
                   <FormControlLabel className={classes.radio} value="Staff" name="role" label="Staff" onChange={onChangestaffForm} control={<Radio color="primary"/>}/>
+                  <FormControlLabel className={classes.radio} value="Manager" name="role" label="Manager" onChange={onChangestaffForm} control={<Radio color="primary"/>}/>
                 </RadioGroup>
               </Grid>             
             </Grid>
-            <Button type="submit" className={classes.btnSubmit}>ORDER</Button>
+            <Box className={classes.boxSubmit}>
+              <Button type="submit" className={classes.btnSubmit}>Thêm nhân viên</Button>
+            </Box>
           </form>
         </Box>
       </Box>
+      <Dialog
+        open={openDoB}
+        onClose={() => {
+          setOpenDoB(false);
+        }}
+        BackdropProps={{ style: { backgroundColor: "transparent" } }}
+        PaperProps={{
+          style: { top: "203px", left: "138px", transformOrigin: "0px 0px" },
+          className: classes.paperDialog,
+        }}
+      >
+        <Box className="boxDate">
+          <DatePicker 
+            
+            variant="static"
+            value={selectedDoB}
+            onChange={onChangeDoB}
+            leftArrowButtonProps={{ classes: { root: classes.btnLeftArrow } }}
+            rightArrowButtonProps={{ classes: { root: classes.btnRightArrow } }}
+          />
+        </Box>
+      </Dialog>
+      <Dialog
+        open={openJoinDate}
+        onClose={() => {
+          setOpenJoinDate(false);
+        }}
+        BackdropProps={{ style: { backgroundColor: "transparent" } }}
+        PaperProps={{
+          style: { top: "203px", left: "138px", transformOrigin: "0px 0px" },
+          className: classes.paperDialog,
+        }}
+      >
+        <Box className="boxDate">
+          <DatePicker 
+            variant="static"
+            value={selectedJoinDate}
+            onChange={onChangeJoinDate}
+            leftArrowButtonProps={{ classes: { root: classes.btnLeftArrow } }}
+            rightArrowButtonProps={{ classes: { root: classes.btnRightArrow } }}
+          />
+        </Box>
+      </Dialog>
     </Dialog>
   );
 }
@@ -166,10 +216,14 @@ const useStyle = makeStyles(() => ({
   listItem: {
     maxWidth: '40%'
   },
+  boxSubmit: {
+    display: 'flex',
+    justifyContent: 'center'
+  },
   btnSubmit: {
     width: '20%',
     height: '28px',
-    backgroundColor: 'green'
+    backgroundColor: '#00B2BF'
   },
   amount: {
     display: 'flex',
@@ -198,5 +252,9 @@ const useStyle = makeStyles(() => ({
           // fontWeight: '500!important',
       }
   },
+  customInput: {
+    display: 'flex',
+    alignItems: 'flex-end'
+  }
 }));
 export default AddOrderDialog;

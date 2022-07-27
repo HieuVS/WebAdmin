@@ -17,6 +17,18 @@ const staffReducer = (state = initialState, action) => {
             ...state,
             staff: state.staff.filter(item=> item._id !== payload)
         }
+        case 'POST_STAFF':
+            return {
+                ...state,
+                staff: [payload, ...state.staff]
+            }
+        case 'UPDATE_STAFF':
+            let updateStaff = state.staff.map(man => 
+                man._id === payload._id ? payload : man)
+            return {
+                ...state,
+                staff: updateStaff
+            }
         default:
             return state;
     }

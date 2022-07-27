@@ -13,6 +13,8 @@ const chargeRouter = require('./routes/charge');
 const discountRouter = require('./routes/discount');
 const paymentRouter = require('./routes/payment');
 const categoryRouter = require('./routes/category');
+const makeSchedule = require('./routes/makeSchedule');
+const makeOrder = require('./routes/makeOrder'); 
 
 const authJwt = require('./middleware/auth');
 
@@ -60,6 +62,10 @@ app.use('/api/discount', discountRouter);
 app.use('/api/payment', paymentRouter);
 
 app.use('/api/category', categoryRouter);
+
+app.use('/api/makeSchedule', makeSchedule);
+
+app.use('/api/makeOrder', makeOrder);
 
 app.get('/api/home/', (req, res) => {
   return res.send("Hello staff");

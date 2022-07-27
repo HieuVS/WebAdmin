@@ -17,6 +17,7 @@ import Footer from './Components/layout/Footer';
 import Table from "./views/Table";
 import Discount from "./views/Discount";
 import Schedule from "./views/Schedule";
+import Statistic from "./Components/layout/Statistic";
 
 function App() {
   useEffect(()=> {
@@ -58,13 +59,23 @@ function App() {
           />
           <ProtectedRoute
             exact
-            path="/Schedule"
+            path="/schedule"
             component={Schedule}
           />
           <ProtectedRoute
             exact
             path="/discount"
             component={Discount}
+          />
+          <ProtectedRoute
+            exact
+            path="/discount"
+            component={Discount}
+          />
+          <ProtectedRoute
+            exact
+            path="/statistic"
+            component={Statistic}
           />
           <ProtectedRoute exact path="/main" component={Main}/>
         </Switch>

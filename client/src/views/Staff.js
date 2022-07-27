@@ -7,10 +7,10 @@ import SearchIcon from "@material-ui/icons/Search";
 import AddToPhotosIcon from '@material-ui/icons/AddToPhotos';
 import BuildIcon from '@material-ui/icons/Build';
 import DeleteIcon from '@material-ui/icons/Delete';
-import formatDate from '../utils/formatDate'
+import { formatDatePicker } from '../utils/formatDate'
 import DeleteStaffDialog from '../Components/layout/Staff/DeleteStaffDialog';
 import AddStaffDialog from "../Components/layout/Staff/AddStaffDialog";
-//import UpdateStaffDialog from "../Components/layout/UpdateStaffDialog";
+import UpdateStaffDialog from "../Components/layout/Staff/UpdateStaffDialog";
 
 function Staff() {
   useEffect(() => {
@@ -91,16 +91,16 @@ function Staff() {
                 <TableCell align="left">{_id}</TableCell>
                 <TableCell align="left">{Ecode}</TableCell>
                 <TableCell align="left">{name}</TableCell>
-                <TableCell align="left">{DoB}</TableCell>
+                <TableCell align="left">{formatDatePicker(DoB)}</TableCell>
                 <TableCell align="left">{phone}</TableCell>
                 <TableCell align="left">{birthPlace}</TableCell>
-                <TableCell align="left">{joinDate}</TableCell>
+                <TableCell align="left">{formatDatePicker(joinDate)}</TableCell>
                 <TableCell align="left">{role}</TableCell>
                 <TableCell align="left" className={classes.btnOption}>
                   <IconButton onClick={()=>setOpenUpdate({[_id]: true})}>
                     <BuildIcon fontSize="medium" />
                   </IconButton>
-                  {/* <UpdateStaffDialog open={openUpdate[staff._id] ? true : false} staff={staff} onClose={()=>setOpenUpdate({[staff._id]: false})}/> */}
+                  <UpdateStaffDialog open={openUpdate[staff._id] ? true : false} staff={staff} onClose={()=>setOpenUpdate({[staff._id]: false})}/>
                   <IconButton  onClick={()=>onOpenDelete(_id)}>
                     <DeleteIcon  fontSize="medium" />
                   </IconButton>
@@ -126,7 +126,7 @@ function Staff() {
                     <IconButton onClick={()=>setOpenUpdate({[_id]: true})}>
                       <BuildIcon fontSize="medium" />
                     </IconButton>
-                    {/* <UpdateStaffDialog open={openUpdate[staff._id] ? true : false} staff={staff} onClose={()=>setOpenUpdate({[staff._id]: false})}/> */}
+                    <UpdateStaffDialog open={openUpdate[staff._id] ? true : false} staff={staff} onClose={()=>setOpenUpdate({[staff._id]: false})}/>
                     <IconButton  onClick={()=>onOpenDelete(_id)}>
                       <DeleteIcon  fontSize="medium" />
                     </IconButton>

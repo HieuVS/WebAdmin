@@ -14,6 +14,7 @@ const formatDate = (date) => {
 export default formatDate;
 
 export const formatDatePicker = (date) => {
+    //console.log('date', date)
     let parseDate = new Date(date)
     let formattedDate = format(parseDate, 'ccccc, dd/MM/yyyy', {
         locale: vilocale
@@ -25,6 +26,15 @@ export const formatDatePicker = (date) => {
 export const formatTimePicker = (date) => {
     let parseDate = new Date(date)
     let formattedDate = format(parseDate, 'kk:m', {
+        locale: vilocale
+    })
+    
+    return formattedDate;
+}
+
+export const formatDay = (date) => {
+    let parseDate = new Date(date)
+    let formattedDate = format(parseDate, 'dd/MM/yyyy', {
         locale: vilocale
     })
     

@@ -9,6 +9,7 @@ import DeleteCategoryTypeDialog from "../Components/layout/Category/DeleteCatego
 import ItemListDialog from "../Components/layout/Category/ItemListDialog";
 import AddItemDialog from "../Components/layout/Category/AddItemDialog";
 import { getItem } from "../api/itemApi";
+import restaurant from '../assets/image/restaurant.jpg'
 
 function Item() {
   const classes = useStyle();
@@ -39,52 +40,64 @@ function Item() {
   }
 
   return (
-    <Box className={classes.categoryContainer}>
-      <Box className={classes.categoryHeader}>
-        <Typography variant="h4">Quản lý danh mục sản phẩm</Typography>
-      </Box>
-      <Box>
-        <Typography variant="h5">Danh mục sản phẩm hiện có</Typography>
-      </Box>
-      <List className={classes.categoryList}>
-        {type ? type.map((item, index)=> (
-          <Paper className={classes.itemContainer} key={index}>
-            <ListItem button onClick={()=>onOpenItemList(item._id)}  className={classes.itemCategory}>
-              <Typography>{item.type}</Typography>
-            </ListItem>
-            <ItemListDialog open={openItemList[item._id] ? true: false} dishesId={item._id} title={item.type} type={type} onClose={()=>setOpenItemList({[item._id]: false})}/>
-            <IconButton  onClick={()=>onOpenDelete(item._id)}>
-              <DeleteIcon  fontSize="medium" />
-            </IconButton>
-            <DeleteCategoryTypeDialog open={openDelete[item._id] ? true: false} typeId={item._id} onClose={()=>setOpenDelete({[item._id]: false})}/>
-          </Paper>
-          
-        )): ''}
-      </List>
-      <Box className={classes.btnGroup}>
-        <Button variant='outlined' onClick={()=>setOpenAddType(true)} className={classes.btnAddCategory}>Thêm danh mục sản phẩm</Button>
-        <Button variant='outlined' onClick={()=>setOpenAddItem(true)} className={classes.btnAddCategory}>Thêm sản phẩm mới</Button>
-      </Box>
-      <AddCategoryTypeDialog open={openAddType} onClose={()=>setOpenAddType(false)}/>
-      <AddItemDialog open={openAddItem} type={type} onClose={()=>setOpenAddItem(false)}/>
+    <Box className={classes.boxContainer}>
+      <Paper className={classes.categoryContainer}>
+        <Box className={classes.categoryHeader}>
+          <Typography variant="h4">Quản lý danh mục sản phẩm</Typography>
+        </Box>
+        <Box>
+          <Typography variant="h5">Danh mục sản phẩm hiện có</Typography>
+        </Box>
+        <List className={classes.categoryList}>
+          {type ? type.map((item, index)=> (
+            <Paper className={classes.itemContainer} key={index}>
+              <ListItem button onClick={()=>onOpenItemList(item._id)}  className={classes.itemCategory}>
+                <Typography>{item.type}</Typography>
+              </ListItem>
+              <ItemListDialog open={openItemList[item._id] ? true: false} dishesId={item._id} title={item.type} type={type} onClose={()=>setOpenItemList({[item._id]: false})}/>
+              <IconButton  onClick={()=>onOpenDelete(item._id)}>
+                <DeleteIcon  fontSize="medium" />
+              </IconButton>
+              <DeleteCategoryTypeDialog open={openDelete[item._id] ? true: false} typeId={item._id} onClose={()=>setOpenDelete({[item._id]: false})}/>
+            </Paper>
+            
+          )): ''}
+        </List>
+        <Box className={classes.btnGroup}>
+          <Button variant='outlined' onClick={()=>setOpenAddType(true)} className={classes.btnAddCategory}>Thêm danh mục sản phẩm</Button>
+          <Button variant='outlined' onClick={()=>setOpenAddItem(true)} className={classes.btnAddCategory}>Thêm sản phẩm mới</Button>
+        </Box>
+        <AddCategoryTypeDialog open={openAddType} onClose={()=>setOpenAddType(false)}/>
+        <AddItemDialog open={openAddItem} type={type} onClose={()=>setOpenAddItem(false)}/>
+      </Paper>
     </Box>
   );
 }
 
 const useStyle = makeStyles(() => ({
+  boxContainer: {
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%), url(${restaurant})`
+  },
   categoryContainer: {
     marginLeft: "auto",
     marginRight: "auto",
-    maxWidth: "84%",
-    minHeight: "88vh",
+    maxWidth: "80%",
+    minHeight: "78vh",
+    padding: '30px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+    //justifyContent: 'center'
     //maxHeight:'85vh'
   },
   categoryHeader: {
-    marginTop: "30px",
+    //marginTop: "30px",
     marginBottom: "20px",
   },
   categoryList: {
-    maxWidth: '52%'
+    minWidth: '52%'
   },
   itemContainer: {
     display: 'flex'

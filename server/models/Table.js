@@ -9,6 +9,7 @@ const Table = new Schema({
         default: Date.now(),
     },
     headCount: Number,
+    tableId: String
 });
 
 module.exports = mongoose.model('tables', Table);

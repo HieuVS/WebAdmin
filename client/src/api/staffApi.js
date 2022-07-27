@@ -27,7 +27,7 @@ export const createStaff = async (staffForm) => {
 
 export const updateStaff = async (updatedStaff) => {
     try {
-        const response = await axios.post(`${apiURL}/staff/${updatedStaff._id}`, updatedStaff);
+        const response = await axios.put(`${apiURL}/staff/${updatedStaff._id}`, updatedStaff);
         if(response.data.success) {
             store.dispatch({type: 'UPDATE_STAFF', payload: response.data.staff})
             return response.data;

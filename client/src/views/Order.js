@@ -1,4 +1,4 @@
-import { Box, Button, Grid, IconButton, InputAdornment, List, ListItem, OutlinedInput, Table, TableBody, TableCell, TableHead, TableRow, Typography} from "@material-ui/core";
+import { Box, Button, Grid, IconButton, InputAdornment, OutlinedInput, Table, TableBody, TableCell, TableHead, TableRow, Typography} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -21,7 +21,7 @@ function Order() {
   }, []);
   const orderList = useSelector((state) => state.order);
   const { order: orders } = orderList;
-  console.log(orders)
+  //console.log(orders)
   const [openDelete, setOpenDelete] = useState({});
   const [openDetail, setOpenDetail] = useState({});
   const [item, setItem] = useState(null);
@@ -55,7 +55,7 @@ function Order() {
   return (
     <Box className={classes.orderContainer}>
       <Box className={classes.orderHeader}>
-        <Typography variant="h3">Danh sách đơn hàng đợi mang đi</Typography>
+        <Typography variant="h3">Danh sách đơn hàng</Typography>
       </Box>
       <Box className={classes.toolBox}>
         <Grid container>
@@ -103,7 +103,7 @@ function Order() {
                 <TableCell align="left">{order.address}</TableCell>
                 <TableCell align="left">
                   <Button className={classes.btnShowItem} id={order._id} onClick={() => onOpenOrderItem(order._id, order.items)}>
-                    {order.items[0].name}
+                    {Array.isArray(order.items) && order.items.length ? order.items[0].name : ''}
                   </Button>
                   {item ? <ShowItemDialog open={openDetail[order._id] ? true: false} onClose={()=>onCloseDialogItem(order._id)} items={item}/> : ''}                 
                 </TableCell>
@@ -137,7 +137,7 @@ function Order() {
                 <TableCell align="left">{order.phone}</TableCell>
                 <TableCell align="left">{order.address}</TableCell>
                 <TableCell align="left">
-                  <Button id={order._id} onClick={() => onOpenOrderItem(order._id, order.items)}>
+                  <Button id={order._id} onClick={() => onOpenOrderItem(order._id, order.items)} style={{textAlign: 'left'}}>
                     {order.items[0].name}
                   </Button>
                   {item ? <ShowItemDialog open={openDetail[order._id] ? true: false} onClose={()=>onCloseDialogItem(order._id)} items={item}/> : ''}                 
@@ -147,9 +147,10 @@ function Order() {
                   {order.isTakeAway ? "take away" : "table"}
                 </TableCell>
                 <TableCell align="left" className={classes.btnOption}>
-                  <IconButton >
+                  <IconButton onClick={()=>setOpenUpdate({[order._id]: true})}>
                     <BuildIcon fontSize="medium" />
                   </IconButton>
+                  <UpdateOrderDialog open={openUpdate[order._id] ? true : false} order={order} onClose={()=>setOpenUpdate({[order._id]: false})}/>
                   <IconButton  onClick={()=>onOpenDelete(order._id)}>
                     <DeleteIcon  fontSize="medium" />
                   </IconButton>
@@ -180,9 +181,14 @@ const useStyle = makeStyles(() => ({
   orderContainer: {
     marginLeft: "auto",
     marginRight: "auto",
-    maxWidth: "80%",
+    marginTop: '20px',
+    maxWidth: "88%",
     minHeight: "88vh",
+    backgroundColor: '#fff',
+    padding: '20px 40px',
     //maxHeight:'85vh'
+    borderRadius: '10px',
+    boxShadow: "5px 5px 5px 5px rgb(0 0 0 / 20%)",
   },
   orderHeader: {
     marginTop: "20px",

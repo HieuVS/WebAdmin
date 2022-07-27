@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getItem } from "../../api/itemApi";
 import { memo } from 'react';
-
+import { formatCash } from '../../utils/formatCash';
 function PickItemDialog(props) {
   const { open, onClose, ...others } = props;
   const classes = useStyle();
@@ -66,7 +66,7 @@ function PickItemDialog(props) {
                   <Box className={classes.itemInfo}>
                     <Typography className={classes.itemName} variant='h5'>{item.name}</Typography>
                     <Box className={classes.addItemBox}>
-                      <Typography className={classes.itemPrice} variant='h6'>{item.price}</Typography>
+                      <Typography className={classes.itemPrice} variant='h6'>{formatCash(item.price)}đ</Typography>
                       <Typography className={classes.itemBtnAdd} variant='button' onClick={()=>{handlePickItem(item.name)}}>Thêm vào giỏ hàng</Typography>
                     </Box>
                   </Box>
@@ -92,7 +92,7 @@ function PickItemDialog(props) {
                   <Box className={classes.itemInfo}>
                     <Typography className={classes.itemName} variant='h5'>{item.name}</Typography>
                     <Box className={classes.addItemBox}>
-                      <Typography className={classes.itemPrice} variant='h6'>{item.price}</Typography>
+                      <Typography className={classes.itemPrice} variant='h6'>{formatCash(item.price)}đ</Typography>
                       <Typography className={classes.itemBtnAdd} variant='button' onClick={()=>{handlePickItem(item.name)}}>Thêm vào giỏ hàng</Typography>
                     </Box>
                   </Box>
@@ -118,7 +118,7 @@ function PickItemDialog(props) {
                   <Box className={classes.itemInfo}>
                     <Typography className={classes.itemName} variant='h5'>{item.name}</Typography>
                     <Box className={classes.addItemBox}>
-                      <Typography className={classes.itemPrice} variant='h6'>{item.price}</Typography>
+                      <Typography className={classes.itemPrice} variant='h6'>{formatCash(item.price)}đ</Typography>
                       <Typography className={classes.itemBtnAdd} variant='button' onClick={()=>{handlePickItem(item.name)}}>Thêm vào giỏ hàng</Typography>
                     </Box>
                   </Box>
@@ -145,7 +145,7 @@ function PickItemDialog(props) {
                   <Box className={classes.itemInfo}>
                     <Typography className={classes.itemName} variant='h5'>{item.name}</Typography>
                     <Box className={classes.addItemBox}>
-                      <Typography className={classes.itemPrice} variant='h6'>{item.price}</Typography>
+                      <Typography className={classes.itemPrice} variant='h6'>{formatCash(item.price)}đ</Typography>
                       <Typography className={classes.itemBtnAdd} variant='button' onClick={()=>{handlePickItem(item.name)}}>Thêm vào giỏ hàng</Typography>
                     </Box>
                   </Box>

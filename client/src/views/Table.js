@@ -11,6 +11,7 @@ import AddTableDialog from "../Components/layout/Table/AddTableDialog";
 import BuildIcon from '@material-ui/icons/Build';
 import DeleteTableDialog from "../Components/layout/Table/DeleteTableDialog";
 import UpdateTableDialog from "../Components/layout/Table/UpdateTableDialog";
+import restaurant from '../assets/image/restaurant.jpg'
 
 function Table() {
   const classes = useStyle();
@@ -37,6 +38,7 @@ function Table() {
   const filteredTable = getTableType();
   
   return (
+    <Box className={classes.boxContainer}>
     <Paper className={classes.paperContainer}>
       <Box className={classes.categoryHeader}>
         <Typography variant="h4">Quản lý đặt bàn</Typography>
@@ -105,16 +107,25 @@ function Table() {
       }
       </Grid>
     </Paper>
+
+    </Box>
   );
 }
 
 const useStyle = makeStyles(() => ({
+  boxContainer: {
+    backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%), url(${restaurant})`
+  },
   paperContainer: {
     marginLeft: "auto",
     marginRight: "auto",
-    maxWidth: "95%",
+    maxWidth: "90%",
     minHeight: "120vh",
     //maxHeight:'85vh'
+    //backgroundImage: `url(${restaurant})`,
+    // backgroundSize: 'cover',
+    // backgroundPosition: 'center',
+    // zIndex: -1
   },
   categoryHeader: {
     paddingTop: '10px',

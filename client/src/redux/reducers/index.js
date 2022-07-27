@@ -7,6 +7,7 @@ import orderReducer from './orderReducer';
 import staffReducer from './staffReducer';
 import tableReducer from './tableReducer';
 import scheduleReducer from './scheduleReducer';
+import paymentReducer from './paymentReducer';
 
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
     discount: discountReducer,
     table: tableReducer,
     schedule: scheduleReducer,
+    payment: paymentReducer
 });
 
 export default rootReducer;
