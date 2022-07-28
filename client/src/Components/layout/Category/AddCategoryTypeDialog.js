@@ -41,7 +41,7 @@ function AddCategoryTypeDialog(props) {
           <form onSubmit={onAddOrder} >
             <Box className={classes.boxCategoryType}>
               <Typography variant="h6">Loại sản phẩm:</Typography>
-              <TextField value={categoryForm.type} onChange={(event)=>setCategoryForm({type: event.target.value})}/>
+              <TextField value={categoryForm.type} className={classes.inputText} onChange={(event)=>setCategoryForm({type: event.target.value})}/>
             </Box>
             <Button type="submit" className={classes.btnSubmit}>Thêm</Button>
           </form>
@@ -80,6 +80,9 @@ const useStyle = makeStyles(() => ({
   btnSubmit: {
     marginTop: '30px',
     width: '36px'
+  },
+  inputText: {
+    marginTop:'15px'
   }
 }));
 export default AddCategoryTypeDialog;

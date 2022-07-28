@@ -15,6 +15,10 @@ export const getItem = async () => {
 }
 
 export const postItem = async (itemForm) => {
+    //console.log('itemForm', itemForm)
+    for(const pair of itemForm.entries()) {
+        console.log(`${pair[0]}, ${pair[1]}`);
+      }
     try {
         const response = await axios.post(`${apiURL}/item`, itemForm);
         if(response.data.success) {

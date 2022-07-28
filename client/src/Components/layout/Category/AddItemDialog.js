@@ -41,8 +41,12 @@ export default function AddItemDialog(props) {
     data.append('stock',stock);
     data.append('isTax',isTax);
     data.append('category',category);
-    console.log('DATA: ', data)
+    //console.log('DATA: ', data)
+    
     try {
+    //   for(const pair of data.entries()) {
+    //   console.log(`${pair[0]}, ${pair[1]}`);
+    // }
       const { success, message } = await postItem(data);
         if(!success) {
           setAlert({ type: "danger", message: message });
@@ -51,13 +55,13 @@ export default function AddItemDialog(props) {
         else {
         console.log("OK ");
         setAddItemForm({
-            name: '',
-            description: '',
-            price: Number,
-            image: null,
-            stock: Number,
-            isTax: 'Yes',
-            category: ''
+          name: '',
+          description: '',
+          price: Number,
+          image: null,
+          stock: Number,
+          isTax: 'Yes',
+          category: ''
           }) 
         onClose();
       }

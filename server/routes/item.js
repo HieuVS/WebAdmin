@@ -21,13 +21,15 @@ var upload = multer({ storage: storage }).single('image');
 // @desc Create item
 // @access Private
 
-router.post("/", [ verifyToken, isOwner], async (req, res) => {
+router.post("/", [ upload, verifyToken, isOwner], async (req, res) => {
   if (!req.isOwner)
-    return res
+  return res
       .status(401)
       .json({ success: false, message: "Need Owner permission" });
+      console.log('REQUSET    2:', req.body)
+      
   const { name, description, price, image, stock, isTax, category } = req.body;
-  console.log('REQUSET:', req.file)
+
   if (!name)
     res
       .status(401)
@@ -37,10 +39,12 @@ router.post("/", [ verifyToken, isOwner], async (req, res) => {
     const item = await Item.findOne({ name });
     if (item)
       res.status(401).json({ success: false, message: "Duplicated Item" });
-    const checkImage = image.data.data ? image : {
+
+    const checkImage = image ? image : {
       data: fs.readFileSync(path.join('uploads/' + req.file.filename)),
       contentType: 'image/png'
     }
+
     const newItem = new Item({
       name,
       description,
@@ -92,26 +96,10 @@ router.put("/:id", [upload, verifyToken, isOwner], async (req, res) => {
     return res
       .status(401)
       .json({ success: false, message: "Need Owner permission" });
-  //console.log(req.query);
-  // if (req.query.reduce) {
-  //   console.log("hjhj: ",req.query);
-  //   try {
-  //     let item = await Item.findOneAndUpdate(
-  //       { _id: req.params.id },
-  //       { $inc: { stock: -req.query.reduce } }
-  //     );
-  //     return res
-  //       .status(200)
-  //       .json({ success: true, message: "Update Item'stock", item });
-  //   } catch (error) {
-  //     console.log("Hehe: ",error)
-  //     res
-  //       .status(500)
-  //       .json({ success: false, message: "Internal server error!" });
-  //   }
-  // }
+  console.log('REQUSET    2:', req.body)
 
   const { name, description, price, image, stock, isTax, category } = req.body;
+  console.log('REQUSET    2:', req.body)
   const tax = isTax === 'Yes' ? true : false;
   if (!name)
     res

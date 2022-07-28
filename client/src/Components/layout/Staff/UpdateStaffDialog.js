@@ -73,7 +73,7 @@ function UpdateStaffDialog(props) {
         <IconButton className={classes.btnClose} onClick={onClose}>
           <CancelIcon className={classes.iconClose}/>
         </IconButton>        
-        <DialogTitle >Thêm thông tin nhân viên</DialogTitle>
+        <DialogTitle >Sửa thông tin nhân viên</DialogTitle>
         <WarningMessage info={alert}/>
         <Box className={classes.boxAddItem}>
           <form onSubmit={onAddOrder}>

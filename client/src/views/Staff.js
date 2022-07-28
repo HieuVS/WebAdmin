@@ -41,86 +41,61 @@ function Staff() {
   }
   const classes = useStyle();
   return (
-    <Box className={classes.staffContainer}>
-      <Box className={classes.staffHeader}>
-        <Typography variant="h3">Danh sách nhân viên</Typography>
-      </Box>
-      <Box className={classes.toolBox}>
-        <Grid container>
-          <Grid item lg={11}>
-            <OutlinedInput className={classes.staffSearch}
-              fullWidth={true}
-              inputProps={{className: classes.inputSearch}}
-              startAdornment= {
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              }
-              onChange={onSearchItem}
-              value={searchItem}
-            />
+    <Box className={classes.boxContainer}>
+      <Box className={classes.staffContainer}>
+        <Box className={classes.staffHeader}>
+          <Typography variant="h3">Danh sách nhân viên</Typography>
+        </Box>
+        <Box className={classes.toolBox}>
+          <Grid container>
+            <Grid item lg={11}>
+              <OutlinedInput className={classes.staffSearch}
+                fullWidth={true}
+                inputProps={{className: classes.inputSearch}}
+                startAdornment= {
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                }
+                onChange={onSearchItem}
+                value={searchItem}
+              />
+            </Grid>
+            <Grid item lg={1} className={classes.addGrid}>
+              <IconButton className={classes.btnAddStaff} onClick={() => setOpenAddStaff(true)}>
+                <AddToPhotosIcon fontSize="large"/>
+              </IconButton>
+              <AddStaffDialog open={openAddStaff} onClose={()=> setOpenAddStaff(false)}/>
+            </Grid>
           </Grid>
-          <Grid item lg={1} className={classes.addGrid}>
-            <IconButton className={classes.btnAddStaff} onClick={() => setOpenAddStaff(true)}>
-              <AddToPhotosIcon fontSize="large"/>
-            </IconButton>
-            <AddStaffDialog open={openAddStaff} onClose={()=> setOpenAddStaff(false)}/>
-          </Grid>
-        </Grid>
-      </Box>
-      <Box className={classes.staffTable}>
-        <Table className={classes.Table}>
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">ID</TableCell>
-              <TableCell align="left">Mã NV</TableCell>
-              <TableCell align="left">Họ và tên</TableCell>
-              <TableCell align="left">Ngày sinh</TableCell>
-              <TableCell align="left">SĐT</TableCell>
-              <TableCell align="left">Quê quán</TableCell>
-              <TableCell align="left">Ngày vào làm</TableCell>
-              <TableCell align="left">Vị trí</TableCell>
-              <TableCell align="left">Tuỳ Chọn</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {!searchItem ? staffs.map((staff) => {
-              const { _id, Ecode, name, phone, DoB, birthPlace, joinDate, role } = staff;
-              return (
-              <TableRow key={_id}>
-                <TableCell align="left">{_id}</TableCell>
-                <TableCell align="left">{Ecode}</TableCell>
-                <TableCell align="left">{name}</TableCell>
-                <TableCell align="left">{formatDatePicker(DoB)}</TableCell>
-                <TableCell align="left">{phone}</TableCell>
-                <TableCell align="left">{birthPlace}</TableCell>
-                <TableCell align="left">{formatDatePicker(joinDate)}</TableCell>
-                <TableCell align="left">{role}</TableCell>
-                <TableCell align="left" className={classes.btnOption}>
-                  <IconButton onClick={()=>setOpenUpdate({[_id]: true})}>
-                    <BuildIcon fontSize="medium" />
-                  </IconButton>
-                  <UpdateStaffDialog open={openUpdate[staff._id] ? true : false} staff={staff} onClose={()=>setOpenUpdate({[staff._id]: false})}/>
-                  <IconButton  onClick={()=>onOpenDelete(_id)}>
-                    <DeleteIcon  fontSize="medium" />
-                  </IconButton>
-                  <DeleteStaffDialog open={openDelete[_id] ? true : false} staffId={_id} onClose={()=>setOpenDelete({[_id]: false})} />
-                </TableCell>
+        </Box>
+        <Box className={classes.staffTable}>
+          <Table className={classes.Table}>
+            <TableHead>
+              <TableRow>
+                <TableCell align="left">ID</TableCell>
+                <TableCell align="left">Mã NV</TableCell>
+                <TableCell align="left">Họ và tên</TableCell>
+                <TableCell align="left">Ngày sinh</TableCell>
+                <TableCell align="left">SĐT</TableCell>
+                <TableCell align="left">Quê quán</TableCell>
+                <TableCell align="left">Ngày vào làm</TableCell>
+                <TableCell align="left">Vị trí</TableCell>
+                <TableCell align="left">Tuỳ Chọn</TableCell>
               </TableRow>
-            )}) 
-            : 
-            (
-              listSearchItem.map((staff) => {
+            </TableHead>
+            <TableBody>
+              {!searchItem ? staffs.map((staff) => {
                 const { _id, Ecode, name, phone, DoB, birthPlace, joinDate, role } = staff;
                 return (
                 <TableRow key={_id}>
                   <TableCell align="left">{_id}</TableCell>
                   <TableCell align="left">{Ecode}</TableCell>
                   <TableCell align="left">{name}</TableCell>
-                  <TableCell align="left">{DoB}</TableCell>
+                  <TableCell align="left">{formatDatePicker(DoB)}</TableCell>
                   <TableCell align="left">{phone}</TableCell>
                   <TableCell align="left">{birthPlace}</TableCell>
-                  <TableCell align="left">{joinDate}</TableCell>
+                  <TableCell align="left">{formatDatePicker(joinDate)}</TableCell>
                   <TableCell align="left">{role}</TableCell>
                   <TableCell align="left" className={classes.btnOption}>
                     <IconButton onClick={()=>setOpenUpdate({[_id]: true})}>
@@ -133,27 +108,58 @@ function Staff() {
                     <DeleteStaffDialog open={openDelete[_id] ? true : false} staffId={_id} onClose={()=>setOpenDelete({[_id]: false})} />
                   </TableCell>
                 </TableRow>
-              )})
-            )
+              )}) 
+              : 
+              (
+                listSearchItem.map((staff) => {
+                  const { _id, Ecode, name, phone, DoB, birthPlace, joinDate, role } = staff;
+                  return (
+                  <TableRow key={_id}>
+                    <TableCell align="left">{_id}</TableCell>
+                    <TableCell align="left">{Ecode}</TableCell>
+                    <TableCell align="left">{name}</TableCell>
+                    <TableCell align="left">{DoB}</TableCell>
+                    <TableCell align="left">{phone}</TableCell>
+                    <TableCell align="left">{birthPlace}</TableCell>
+                    <TableCell align="left">{joinDate}</TableCell>
+                    <TableCell align="left">{role}</TableCell>
+                    <TableCell align="left" className={classes.btnOption}>
+                      <IconButton onClick={()=>setOpenUpdate({[_id]: true})}>
+                        <BuildIcon fontSize="medium" />
+                      </IconButton>
+                      <UpdateStaffDialog open={openUpdate[staff._id] ? true : false} staff={staff} onClose={()=>setOpenUpdate({[staff._id]: false})}/>
+                      <IconButton  onClick={()=>onOpenDelete(_id)}>
+                        <DeleteIcon  fontSize="medium" />
+                      </IconButton>
+                      <DeleteStaffDialog open={openDelete[_id] ? true : false} staffId={_id} onClose={()=>setOpenDelete({[_id]: false})} />
+                    </TableCell>
+                  </TableRow>
+                )})
+              )
 
-          }
-          </TableBody>
-        </Table>
+            }
+            </TableBody>
+          </Table>
+        </Box>
       </Box>
     </Box>
 );
 }
 
 const useStyle = makeStyles(() => ({
+  boxContainer: {
+    backgroundColor: '#ddd6c5'
+  },
   staffContainer: {
     marginLeft: "auto",
     marginRight: "auto",
     maxWidth: "80%",
     minHeight: "88vh",
+    padding: '10px 20px'
     //maxHeight:'85vh'
   },
   staffHeader: {
-    marginTop: "20px",
+    //marginTop: "20px",
     marginBottom: "20px",
   },
   toolBox: {

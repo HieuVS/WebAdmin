@@ -9,7 +9,8 @@ import DeleteCategoryTypeDialog from "../Components/layout/Category/DeleteCatego
 import ItemListDialog from "../Components/layout/Category/ItemListDialog";
 import AddItemDialog from "../Components/layout/Category/AddItemDialog";
 import { getItem } from "../api/itemApi";
-import restaurant from '../assets/image/restaurant.jpg'
+import restaurant from '../assets/image/restaurant.jpg';
+import meal from '../assets/image/Meal.png';
 
 function Item() {
   const classes = useStyle();
@@ -42,30 +43,35 @@ function Item() {
   return (
     <Box className={classes.boxContainer}>
       <Paper className={classes.categoryContainer}>
-        <Box className={classes.categoryHeader}>
-          <Typography variant="h4">Quản lý danh mục sản phẩm</Typography>
+        <Box className={classes.boxImageContainer}>
         </Box>
-        <Box>
-          <Typography variant="h5">Danh mục sản phẩm hiện có</Typography>
-        </Box>
-        <List className={classes.categoryList}>
-          {type ? type.map((item, index)=> (
-            <Paper className={classes.itemContainer} key={index}>
-              <ListItem button onClick={()=>onOpenItemList(item._id)}  className={classes.itemCategory}>
-                <Typography>{item.type}</Typography>
-              </ListItem>
-              <ItemListDialog open={openItemList[item._id] ? true: false} dishesId={item._id} title={item.type} type={type} onClose={()=>setOpenItemList({[item._id]: false})}/>
-              <IconButton  onClick={()=>onOpenDelete(item._id)}>
-                <DeleteIcon  fontSize="medium" />
-              </IconButton>
-              <DeleteCategoryTypeDialog open={openDelete[item._id] ? true: false} typeId={item._id} onClose={()=>setOpenDelete({[item._id]: false})}/>
-            </Paper>
-            
-          )): ''}
-        </List>
-        <Box className={classes.btnGroup}>
-          <Button variant='outlined' onClick={()=>setOpenAddType(true)} className={classes.btnAddCategory}>Thêm danh mục sản phẩm</Button>
-          <Button variant='outlined' onClick={()=>setOpenAddItem(true)} className={classes.btnAddCategory}>Thêm sản phẩm mới</Button>
+        <Box style={{zIndex: 10}}>
+          <Box className={classes.categoryHeader}>
+            <Typography variant="h3" className={classes.fontHeader}>Quản lý danh mục sản phẩm</Typography>
+          </Box>
+          <Box>
+            <Typography variant="h5" className={classes.fontTitle}>Danh mục sản phẩm hiện có</Typography>
+          </Box>
+          <List className={classes.categoryList}>
+            {type ? type.map((item, index)=> (
+              <Paper className={classes.itemContainer} key={index}>
+                <ListItem button onClick={()=>onOpenItemList(item._id)}  className={classes.itemCategory}>
+                  <Typography variant="h5" className={classes.fontTitle}>{item.type}</Typography>
+                </ListItem>
+                <ItemListDialog open={openItemList[item._id] ? true: false} dishesId={item._id} title={item.type} type={type} onClose={()=>setOpenItemList({[item._id]: false})}/>
+                <IconButton  onClick={()=>onOpenDelete(item._id)}>
+                  <DeleteIcon  fontSize="medium" />
+                </IconButton>
+                <DeleteCategoryTypeDialog open={openDelete[item._id] ? true: false} typeId={item._id} onClose={()=>setOpenDelete({[item._id]: false})}/>
+              </Paper>
+              
+            )): ''}
+          </List>
+          <Box className={classes.btnGroup}>
+            <Button variant='outlined' onClick={()=>setOpenAddType(true)} className={classes.btnAddCategory}>Thêm danh mục sản phẩm</Button>
+            <Button variant='outlined' onClick={()=>setOpenAddItem(true)} className={classes.btnAddCategory}>Thêm sản phẩm mới</Button>
+          </Box>
+
         </Box>
         <AddCategoryTypeDialog open={openAddType} onClose={()=>setOpenAddType(false)}/>
         <AddItemDialog open={openAddItem} type={type} onClose={()=>setOpenAddItem(false)}/>
@@ -78,23 +84,38 @@ const useStyle = makeStyles(() => ({
   boxContainer: {
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%), url(${restaurant})`
+    backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%), url(${restaurant})`,
+    position: 'relative'
   },
   categoryContainer: {
     marginLeft: "auto",
     marginRight: "auto",
     maxWidth: "80%",
-    minHeight: "78vh",
+    minHeight: "70vh",
     padding: '30px',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center'
-    //justifyContent: 'center'
-    //maxHeight:'85vh'
+    alignItems: 'center',
+    paddingTop: '100px',
+    //backgroundColor: 'antiquewhite',
+  },
+  boxImageContainer: {
+    backgroundImage:`url(${meal})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    width:'80%',
+    height: '80%',
+    position: 'absolute',
+    zIndex: 2
   },
   categoryHeader: {
-    //marginTop: "30px",
     marginBottom: "20px",
+  },
+  fontHeader: {
+    fontWeight: '700',
+  },
+  fontTitle: {
+    fontWeight: '600',
   },
   categoryList: {
     minWidth: '52%'
@@ -107,13 +128,17 @@ const useStyle = makeStyles(() => ({
     justifyContent: 'space-between'
   },
   btnGroup: {
-    width: '48%',
+    //width: '48%',
     marginTop: '30px',
     display: 'flex',
     justifyContent: 'space-evenly'
   },
   btnAddCategory: {
-
+    fontWeight: 600,
+    backgroundColor: '#EF5845',
+    '&:hover': {
+      backgroundColor: '#fff',
+    }
   },
 }));
 export default Item;

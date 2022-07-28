@@ -9,6 +9,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import DeleteItemDialog from "./DeleteItemDialog";
 import UpdateItemDialog from "./UpdateItemDialog";
 import { imageToBase64 } from '../../../constants/imageToBase64';
+import { formatCash } from '../../../utils/formatCash';
 
 function ItemListDialog(props) {
   const { open, onClose, dishesId, title, type } = props;
@@ -47,7 +48,7 @@ function ItemListDialog(props) {
                   <Box className={classes.itemInfo}>
                     <Typography className={classes.itemName} variant='h5'>{item.name}</Typography>
                     <Box className={classes.addItemBox}>
-                      <Typography className={classes.itemPrice} variant='h6'>{item.price}</Typography>
+                      <Typography className={classes.itemPrice} variant='h6'>{formatCash(item.price)}đ</Typography>
                       <Box className={classes.itemBtnAdd} id="toolBox" onClick={()=>{}}>
                         <IconButton onClick={()=>setOpenUpdateItem({[item._id]:true})}  className={classes.btnTool}>
                           <BuildIcon  fontSize="small" />

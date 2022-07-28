@@ -86,7 +86,7 @@ export default function UpdateItemDialog(props) {
       <IconButton className={classes.btnClose} onClick={onClose}>
         <CancelIcon className={classes.iconClose} />
       </IconButton>
-      <DialogTitle>Thêm sản phẩm mới</DialogTitle>
+      <DialogTitle>Chỉnh sửa sản phẩm</DialogTitle>
       <WarningMessage info={alert}/>
       <Paper className={classes.paperAddItem}>
         <form onSubmit={onUpdateItem} encType="multipart/form-data">
