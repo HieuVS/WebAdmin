@@ -10,7 +10,9 @@ import formatDate from '../utils/formatDate';
 import AddTableDialog from "../Components/layout/Table/AddTableDialog";
 import DeleteTableDialog from "../Components/layout/Table/DeleteTableDialog";
 import AddScheduleDialog from "../Components/layout/Table/AddScheduleDialog";
+import BuildIcon from '@material-ui/icons/Build';
 import store from "../redux/store";
+import UpdateTableDialog from "../Components/layout/Table/UpdateTableDialog";
 
 function Schedule() {
   const classes = useStyle();
@@ -22,6 +24,7 @@ function Schedule() {
   //console.log('Re=Render Schedule');
   const [openDelete, setOpenDelete] = useState({});
   const [openCreateTable, setOpenCreateTable] = useState(false);
+  const [openUpdateTable, setOpenUpdateTable] = useState({})
   const [openAddSchedule, setOpenAddSchedule] = useState(false);
   const [type, setType] = useState('Inactive');
   const [table, setTable] = useState('');
@@ -47,6 +50,25 @@ function Schedule() {
       store.dispatch({type: `SET_DATA_SCHEDULE`, payload: { table: item}, id: item._id} )
     }
   }
+
+  const onOpenDeleteTable = (event, id) => {
+    event.stopPropagation();
+    setOpenDelete({[id]: true})
+  }
+
+  const onCloseDeleteTable = (event, id) => {
+    event.stopPropagation();
+    setOpenDelete({[id]: false})
+  }
+
+  // const onOpenUpdateTable = (event, id) => {
+  //   event.stopPropagation();
+  //   setOpenUpdateTable({[id]:true})
+  // }
+  // const onCloseUpdateTable = (event, id) => {
+  //   event.stopPropagation();
+  //   setOpenUpdateTable({[id]: false})
+  // }
 
   return (
     <Paper className={classes.paperContainer}>
@@ -102,11 +124,15 @@ function Schedule() {
                     <Typography variant="h5" className={classes.itemTitle}>Số người: {item.headCount}</Typography>
                   </Box>
                   <Box className={classes.deleteDiscount}>
-                    <IconButton  onClick={()=>setOpenDelete({[item._id]: true})}>
+                    {/* <IconButton onClick={(e)=>onOpenUpdateTable(e, item._id)}  className={classes.btnTool}>
+                      <BuildIcon  fontSize="medium" />
+                    </IconButton> */}
+                    <IconButton  onClick={(e)=>onOpenDeleteTable(e, item._id)}>
                       <DeleteIcon  fontSize="medium" />
                     </IconButton>
                   </Box>
-                  <DeleteTableDialog open={openDelete[item._id] ? true: false} tableId={item._id} onClose={()=>setOpenDelete({[item._id]: false})}/>
+                  <DeleteTableDialog open={openDelete[item._id] ? true: false} tableId={item._id} onClose={(e)=>onCloseDeleteTable(e, item._id)}/>
+                  {/* <UpdateTableDialog open={openUpdateTable[item._id] ? true: false} onClose={(e)=>onCloseUpdateTable(e, item._id)} item={item} /> */}
                 </Paper>
               </Grid>            
           );
@@ -174,7 +200,8 @@ const useStyle = makeStyles(() => ({
   deleteDiscount: {
     position: 'absolute',
     top: '3px',
-    right: '1px'
+    right: '1px',
+    zIndex: 100
   },
   title: {
     margin: '20px'
