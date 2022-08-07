@@ -3,12 +3,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from '@material-ui/icons/Cancel';
 import { useEffect, useState } from "react";
 import PickItemDialog from "./PickItemDialog";
-import WarningMessage from "./WarningMessage";
 import update from 'immutability-helper';
 import { postOrder } from "../../api/orderApi";
 import { getDiscount } from "../../api/discountApi";
 import { useSelector } from "react-redux";
-
+import clsx from 'clsx';
+import HighlightOffSharpIcon from '@material-ui/icons/HighlightOffSharp';
+import { formatCash } from "../../utils/formatCash";
+import PaymentOrderDialog from "./PaymentOrderDialog";
 function AddOrderDialog(props) {
   const { open, onClose } = props;
   const classes = useStyle();
@@ -17,10 +19,8 @@ function AddOrderDialog(props) {
     getDiscount()
   },[])
 
-  const discountList = useSelector((state) => state.discount);
 
   const [openPickItem, setOpenPickItem] = useState(false);
-  const [alert, setAlert] = useState(null);
   const [itemList, setItemList] = useState()
   const [orderForm, setOrderForm] = useState({
     name: "",
@@ -31,6 +31,7 @@ function AddOrderDialog(props) {
   });
   const { name, phone, address, items, checkTakeAway } = orderForm;
   
+  const [openPayment, setOpenPayment] = useState(false);
 
   const onGetItem = (itemList) => {
     setItemList(itemList);
@@ -41,8 +42,8 @@ function AddOrderDialog(props) {
   const onChangeCount = (index, event) => {
     let value = parseInt(event.target.value.replace(/[^\d]+/g,''));
     let updatedItem;
-    if(isNaN(value)) updatedItem = update(itemList, {[index]: {quantity: {$set: 1}}}); 
-    else updatedItem = update(itemList, {[index]: {quantity: {$set: value}}}); 
+    if(isNaN(value)) updatedItem = update(itemList, {[index]: {quantity: {$set: 1}, amount: {$set: itemList[index].price}}}); 
+    else updatedItem = update(itemList, {[index]: {quantity: {$set: value}, amount: {$set: itemList[index].price * value}}}); 
     setItemList(updatedItem);
     setOrderForm({...orderForm, items: updatedItem})
     // let newList = [...itemList];
@@ -52,7 +53,10 @@ function AddOrderDialog(props) {
 
   const onIncrease = (index, item) => {
     if(item.quantity < 999) {
-      let updateIncrease = update(itemList, {[index]: {quantity: {$set: itemList[index].quantity+1 }}});
+      let updateIncrease = update(itemList, {[index]: {
+        quantity: {$set: item.quantity+1 }, 
+        amount : {$set : item.price * (item.quantity+1) }
+      }});
       setItemList(updateIncrease);
       setOrderForm({...orderForm, items: updateIncrease})
     }
@@ -60,40 +64,50 @@ function AddOrderDialog(props) {
 
   const onDecrease= (index, item) => {
     if(item.quantity > 1) {
-      let updateDecrease = update(itemList, {[index]: {quantity: {$set: itemList[index].quantity-1 }}});
+      let updateDecrease = update(itemList, {[index]: {
+        quantity: {$set: item.quantity-1 },
+        amount : {$set : item.price * (item.quantity-1) }
+      }});
       setItemList(updateDecrease);
       setOrderForm({...orderForm, items: updateDecrease})
     }
   }
+
+  const onDeleteItem = (index) => {
+    let updateDelete =  update(itemList,{ $splice: [[index, 1]]  });
+    setItemList(updateDelete)
+  }
+
 
   const onChangeOrderForm = (event) => {
     setOrderForm({...orderForm, items: itemList, [event.target.name]: event.target.value })
   }
 
   //console.log("orderForm", orderForm);
-  const onAddOrder = async (event) => {
-    event.preventDefault();
-    try {
-      const { success, message } = await postOrder(orderForm);
-      if(!success) {
-        setAlert({ type: "danger", message: message });
-        setTimeout(() => setAlert(null), 5000);
-      }
-      else {
-        console.log("OK ");
-        setOrderForm({
-          name: "",
-          phone: "",
-          address: "",
-          items: [],
-          checkTakeAway: "takeaway",
-        })
-        onClose();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  //const onAddOrder = async (event) => {
+    // event.preventDefault();
+    // try {
+    //   const { success, message } = await postOrder(orderForm);
+    //   if(!success) {
+    //     setAlert({ type: "danger", message: message });
+    //     setTimeout(() => setAlert(null), 5000);
+    //   }
+    //   else {
+    //     console.log("OK ");
+    //     setOrderForm({
+    //       name: "",
+    //       phone: "",
+    //       address: "",
+    //       items: [],
+    //       checkTakeAway: "takeaway",
+    //       discount: ''
+    //     })
+    //     onClose();
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
+  //}
   return (
     <Dialog
       open={open}
@@ -106,9 +120,8 @@ function AddOrderDialog(props) {
           <CancelIcon className={classes.iconClose}/>
         </IconButton>        
         <DialogTitle >Thêm đơn hàng mang đi</DialogTitle>
-        <WarningMessage info={alert}/>
         <Box className={classes.boxAddItem}>
-          <form onSubmit={onAddOrder}>
+          <Box>
             <Box >
               <Box className={classes.inputAddInfo}>
                 <TextField label="Họ và tên" className={classes.inputLeft} name="name" value={name} onChange={onChangeOrderForm} required></TextField>
@@ -118,27 +131,27 @@ function AddOrderDialog(props) {
                 <TextField label="Địa chỉ" fullWidth name="address" value={address} onChange={onChangeOrderForm} required></TextField>
               </Box>
               <Box className={classes.inputAddInfo}>
-                <TextField label="Mã giảm giá" name="" ></TextField>
-              </Box>
-              <Box className={classes.inputAddInfo}>
                 <Button onClick={()=>setOpenPickItem(true)}>Chọn sản phẩm</Button>
                 {itemList ?
                   <List className={classes.listItem}>
                     <Grid container spacing={4} style={{'padding': '8px 16px'}}>
-                        <Grid item md={6}>
+                        <Grid item md={4}>
                           <Typography>Tên sản phẩm</Typography>
                         </Grid>
-                        <Grid item md={6}>
+                        <Grid item md={3}>
                           <Typography>Số lượng</Typography>
+                        </Grid>
+                        <Grid item md={3}>
+                          <Typography>Giá tiền</Typography>
                         </Grid>
                     </Grid>
                     {itemList.map((item,index) => (
                     <ListItem key={index}>
                     <Grid className={classes.amount} container spacing={4}>
-                        <Grid item md={6}>
+                        <Grid item md={4}>
                           <Typography>{item.name}</Typography>
                         </Grid>
-                        <Grid item md={6} className={classes.amountBox}>                        
+                        <Grid item md={3} className={classes.amountBox}>                        
                           <IconButton className={classes.btnSubPlus} onClick={()=>onDecrease(index, item)}>
                             <SvgIcon><path d="M19 13H5v-2h14v2z"></path></SvgIcon>
                           </IconButton>
@@ -147,6 +160,14 @@ function AddOrderDialog(props) {
                           <IconButton className={classes.btnSubPlus} onClick={()=>onIncrease(index, item)}>
                             <SvgIcon><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></SvgIcon>
                           </IconButton>                     
+                        </Grid>
+                        <Grid item md={3}>
+                          <Typography>{formatCash(item.amount)}đ</Typography>
+                        </Grid>
+                        <Grid item md={2}>
+                          <IconButton className={classes.btnDeleteItem} onClick={()=>onDeleteItem(index)}>
+                            <HighlightOffSharpIcon className={classes.iconDeleteItem}/>
+                          </IconButton>
                         </Grid>
                     </Grid>
                     </ListItem>
@@ -162,11 +183,12 @@ function AddOrderDialog(props) {
                   <FormControlLabel className={classes.radio} value="stay" name="checkTakeAway" label="Ăn tại chỗ" onChange={onChangeOrderForm}  control={<Radio color="primary"/>}/>
                 </RadioGroup>
               </Box>             
-              <Button type="submit" className={classes.btnSubmit}>ORDER</Button>
+              <Button onClick={()=>setOpenPayment(true)}  className={classes.btnSubmit}>ORDER</Button>
             </Box>
-          </form>
+          </Box>
         </Box>
       </Box>
+      <PaymentOrderDialog open={openPayment} onClose={()=>setOpenPayment(false)} onCloseAddOrder={onClose} orderForm={orderForm}/>
     </Dialog>
   );
 }
@@ -204,15 +226,16 @@ const useStyle = makeStyles(() => ({
     width: '50%',
   },
   listItem: {
-    maxWidth: '40%'
+    maxWidth: '80%'
   },
   btnSubmit: {
     width: '20%',
-    height: '28px',
-    backgroundColor: 'green'
+    height: '30px',
+    backgroundColor: '#EF5845'
   },
   amount: {
     display: 'flex',
+    alignItems: 'center'
   },
   amountBox: {
       display: 'flex',

@@ -40,7 +40,7 @@ router.post("/", [verifyToken, isOwner], async (req, res) => {
 // @desc GET discount list
 // @access Private
 
-router.get("/", verifyToken, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const discountList = await Discount.find({});
 

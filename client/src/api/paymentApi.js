@@ -49,3 +49,16 @@ export const getProduct = async () => {
         return error.response.data ? error.response.data : { success: false, message: 'Server error!'}
     }
 }
+
+export const createPayment = async (dataForm) => {
+    console.log('dataForm ',dataForm)
+    try {
+        const response = await axios.post(`${apiURL}/payment`, dataForm);
+        if(response.data.success)  {
+            //store.dispatch({type: 'CREATE_PAYMENT', payload: response.data.payment});
+            return response.data;
+        }
+    } catch (error) {
+        return error.response.data ? error.response.data : { success: false, message: 'Server error!'}
+    }
+}

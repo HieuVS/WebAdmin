@@ -17,7 +17,8 @@ import WarningMessage from "../WarningMessage";
 import CancelIcon from "@material-ui/icons/Cancel";
 import { getDiscount } from "../../../api/discountApi";
 import { useSelector } from "react-redux";
-import { makeOrderSchedule, makePaymentSchedule, updateTablePay } from "../../../api/scheduleApi";
+import { makeOrderSchedule, updateTablePay } from "../../../api/scheduleApi";
+import { createPayment } from "../../../api/paymentApi";
 
 function PaymentScheduleDialog({ open, onClose, customerInfo, table, itemList, onCloseParent}) {
   const classes = useStyle();
@@ -82,7 +83,7 @@ function PaymentScheduleDialog({ open, onClose, customerInfo, table, itemList, o
         checkTakeAway: 'stay'
       });
 
-      const paymentPromise = makePaymentSchedule({
+      const paymentPromise = createPayment({
         customer: {...customerInfo.customer},
         ...itemList,
         discount: discount ? discount._id : null,

@@ -7,7 +7,8 @@ const Order = require("../models/Order");
 // @access Private
 
 router.post("/", async (req, res) => {
-  const { items, name, phone, address, isTakeAway } = req.body;
+  const { items, customer, isTakeAway, tax, totalAmount } = req.body;
+  const { name, phone, address } = customer;
   if (!phone)
     res
       .status(401)
@@ -23,9 +24,7 @@ router.post("/", async (req, res) => {
     const newOrder = new Order({
         items,
         isTakeAway: isTakeAway,
-        name,
-        phone,
-        address,
+        ...customer
     })
 
     await newOrder.save();
@@ -34,6 +33,22 @@ router.post("/", async (req, res) => {
       message: "Add new Order successfully",
       order: newOrder,
     });
+
+    const newPayment = new Payment({
+        customer,
+        items,
+        tax,
+        isTakeAway,
+        totalAmount,
+    })
+    await newPayment.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Add new Schedule successfully",
+      payment: newPayment,
+    });
+    
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Internal server error!" });

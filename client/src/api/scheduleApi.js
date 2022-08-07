@@ -31,15 +31,3 @@ export const makeOrderSchedule = async (scheduleForm) => {
     }
 }
 
-export const makePaymentSchedule = async (scheduleForm) => {
-    console.log('PaymentSchedule ',scheduleForm)
-    try {
-        const response = await axios.post(`${apiURL}/payment`, scheduleForm);
-        if(response.data.success)  {
-            //store.dispatch({type: 'CREATE_PAYMENT', payload: response.data.payment});
-            return response.data;
-        }
-    } catch (error) {
-        return error.response.data ? error.response.data : { success: false, message: 'Server error!'}
-    }
-}

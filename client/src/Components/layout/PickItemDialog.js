@@ -27,14 +27,15 @@ function PickItemDialog(props) {
   //console.log('onGetItem: ', itemPicked);
 
   const handlePickItem = (item) => {
-    let checkExisted = itemPicked.findIndex(element => element.name.includes(item))
+    const { name, price } = item;
+    let checkExisted = itemPicked.findIndex(element => element.name.includes(name))
     if(checkExisted===-1) {
-      setItemPicked([...itemPicked, {name : item, quantity: 1}]);
-      props.onGetItem([...itemPicked, {name : item, quantity: 1}]);
+      setItemPicked([...itemPicked, {name : name, quantity: 1, price : price, amount: price}]);
+      props.onGetItem([...itemPicked, {name : name, quantity: 1, price : price, amount: price}]);
     }
     else {
       const newItem = itemPicked.map(element => {
-        if(element.name===item) return {...element,  quantity: element.quantity +1 }
+        if(element.name===item) return {...element,  quantity: element.quantity +1, amount: element.price*(element.quantity + 1) }
           return element;
       })
       setItemPicked(newItem);
@@ -67,7 +68,7 @@ function PickItemDialog(props) {
                     <Typography className={classes.itemName} variant='h5'>{item.name}</Typography>
                     <Box className={classes.addItemBox}>
                       <Typography className={classes.itemPrice} variant='h6'>{formatCash(item.price)}đ</Typography>
-                      <Typography className={classes.itemBtnAdd} variant='button' onClick={()=>{handlePickItem(item.name)}}>Thêm vào giỏ hàng</Typography>
+                      <Typography className={classes.itemBtnAdd} variant='button' onClick={()=>{handlePickItem(item)}}>Thêm vào giỏ hàng</Typography>
                     </Box>
                   </Box>
                 </Grid>
@@ -93,7 +94,7 @@ function PickItemDialog(props) {
                     <Typography className={classes.itemName} variant='h5'>{item.name}</Typography>
                     <Box className={classes.addItemBox}>
                       <Typography className={classes.itemPrice} variant='h6'>{formatCash(item.price)}đ</Typography>
-                      <Typography className={classes.itemBtnAdd} variant='button' onClick={()=>{handlePickItem(item.name)}}>Thêm vào giỏ hàng</Typography>
+                      <Typography className={classes.itemBtnAdd} variant='button' onClick={()=>{handlePickItem(item)}}>Thêm vào giỏ hàng</Typography>
                     </Box>
                   </Box>
                 </Grid>
@@ -119,7 +120,7 @@ function PickItemDialog(props) {
                     <Typography className={classes.itemName} variant='h5'>{item.name}</Typography>
                     <Box className={classes.addItemBox}>
                       <Typography className={classes.itemPrice} variant='h6'>{formatCash(item.price)}đ</Typography>
-                      <Typography className={classes.itemBtnAdd} variant='button' onClick={()=>{handlePickItem(item.name)}}>Thêm vào giỏ hàng</Typography>
+                      <Typography className={classes.itemBtnAdd} variant='button' onClick={()=>{handlePickItem(item)}}>Thêm vào giỏ hàng</Typography>
                     </Box>
                   </Box>
                 </Grid>
@@ -146,7 +147,7 @@ function PickItemDialog(props) {
                     <Typography className={classes.itemName} variant='h5'>{item.name}</Typography>
                     <Box className={classes.addItemBox}>
                       <Typography className={classes.itemPrice} variant='h6'>{formatCash(item.price)}đ</Typography>
-                      <Typography className={classes.itemBtnAdd} variant='button' onClick={()=>{handlePickItem(item.name)}}>Thêm vào giỏ hàng</Typography>
+                      <Typography className={classes.itemBtnAdd} variant='button' onClick={()=>{handlePickItem(item)}}>Thêm vào giỏ hàng</Typography>
                     </Box>
                   </Box>
                 </Grid>
